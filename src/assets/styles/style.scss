@@ -1,0 +1,32 @@
+@import './vars';
+
+// /. imports
+
+html {
+    font-size: 14px;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'MS Sans Serif', sans-serif;
+    font-size: inherit;
+    font-weight: 400;
+    color: $dark-color;
+    background-color: $white-color;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#root,
+.App {
+    height: 100%;
+}
+
+.App {
+    background-color: $green-color;
+}
+
+// /. general-styles

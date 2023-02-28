@@ -1,8 +1,9 @@
 export interface Irow {
-    id: number;
+    id: string;
     x: number;
     y: number;
     value: any;
     IsFlipped: boolean;
     isFlagged: boolean;
+    isWarned: boolean;
 }

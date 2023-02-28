@@ -3,15 +3,15 @@ import React, { useState, useEffect } from 'react';
 // /. imports
 
 const Timer: React.FC = () => {
-    const [time, setTime] = useState<number>(99);
+    const [time, setTime] = useState<number>(0);
 
     // /. hooks
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setTime((prev: any) => prev + 1);
-        }, 1000);
-        return () => clearInterval(timer);
+        // const timer = setInterval(() => {
+        //     setTime((prev: any) => prev + 1);
+        // }, 1000);
+        // return () => clearInterval(timer);
     }, []);
 
     // /. effects

@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import { useAppSelector } from '../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+
+import { setBoardData } from '../../app/slices/boardSlice';
 
 import { generateBoard } from '../../helpers/generateBoard';
 
@@ -13,11 +15,11 @@ import './playground.scss';
 // /. imports
 
 const Playground: React.FC = () => {
-    const { colCount, rowCount, bombsCount } = useAppSelector(
+    const { colCount, rowCount, bombsCount, boardData } = useAppSelector(
         state => state.boardSlice
     );
 
-    const [board, setBoard] = useState<Irow[][]>([]);
+    const dispatch = useAppDispatch();
 
     const playgroundRef = useRef<HTMLDivElement>(null!);
 
@@ -29,8 +31,7 @@ const Playground: React.FC = () => {
 
     useEffect(() => {
         const newBoard = generateBoard(colCount, rowCount, bombsCount);
-        // console.log(newBoard);
-        setBoard(newBoard);
+        dispatch(setBoardData(newBoard));
     }, [colCount, rowCount, bombsCount]);
 
     // /. effects
@@ -40,9 +41,19 @@ const Playground: React.FC = () => {
             className="playground-area"
             ref={playgroundRef}
         >
-            {board.map(row => {
+            {boardData.map(row => {
                 return row.map((field: Irow) => {
-                    return <Cell key={field.id}>{field.value}</Cell>;
+                    return (
+                        <Cell
+                            key={field.id}
+                            id={field.id}
+                            isFlipped={field.IsFlipped}
+                            isFlagged={field.isFlagged}
+                            isWarned={field.isWarned}
+                        >
+                            {field.value}
+                        </Cell>
+                    );
                 });
             })}
         </div>

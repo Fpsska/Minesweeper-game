@@ -1,6 +1,7 @@
 import { Irow } from '../Types/boardTypes';
 
 import { getRandomNum } from './getRandomNum';
+import { generateUniqueID } from './generateUniqueID';
 
 // /. imports
 
@@ -15,12 +16,13 @@ export function generateBoard(
         const rowArray: Irow[] = [];
         for (let y = 0; y < col; y++) {
             rowArray.push({
-                id: Math.floor(+new Date() * y),
+                id: generateUniqueID(10),
                 x,
                 y,
                 value: 0,
                 IsFlipped: false,
-                isFlagged: false
+                isFlagged: false,
+                isWarned: false
             });
         }
         board.push(rowArray);

@@ -40,10 +40,10 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: $gray-color;
-    border-top: 1px solid $gray-color;
-    border-left: 1px solid $gray-color;
-    border-bottom: 1px solid $dark-color;
-    border-right: 1px solid $dark-color;
+    border-top: 3px solid $gray-color;
+    border-left: 3px solid $gray-color;
+    border-bottom: 3px solid $dark-color;
+    border-right: 3px solid $dark-color;
 
     &__wrapper {
         display: flex;
@@ -55,7 +55,7 @@ body {
         display: flex;
         align-items: center;
         background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
-        padding: 4px 8px;
+        padding: 4px 5px;
     }
 
     &__image {
@@ -74,78 +74,14 @@ body {
 
     &__body {
         padding: 20px;
-        border-top: 2px solid $white-color;
-        border-left: 2px solid $white-color;
-        border-bottom: 2px solid $dark-gray-color;
-        border-right: 2px solid $dark-gray-color;
+        border-top: 4px solid $white-color;
+        border-left: 4px solid $white-color;
+        border-bottom: 4px solid $dark-gray-color;
+        border-right: 4px solid $dark-gray-color;
     }
 
     &__information {
         background-color: $gray-color;
         margin-bottom: 10px;
-    }
-}
-
-.information {
-
-    display: flex;
-    justify-content: space-between;
-    padding: 14px;
-    border-top: 2px solid $dark-gray-color;
-    border-left: 2px solid $dark-gray-color;
-    border-bottom: 2px solid $white-color;
-    border-right: 2px solid $white-color;
-
-    &__mines-count,
-    &__timer {
-
-        background-color: $dark-color;
-        border-top: 1px solid $dark-color;
-        border-left: 1px solid $dark-color;
-        border-bottom: 1px solid $white-color;
-        border-right: 1px solid $white-color;
-        height: 30px;
-
-        span {
-            padding: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            color: $red-color;
-            font-family: 'Minecraft', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
-            line-height: 1;
-            border-top: 1px solid $dark-gray-color;
-            border-left: 1px solid $dark-gray-color;
-            border-bottom: 1px solid $gray-color;
-            border-right: 1px solid $gray-color;
-        }
-    }
-
-    &__status {
-        border-top: 1px solid $white-color;
-        border-left: 1px solid $white-color;
-        border-bottom: 1px solid $dark-color;
-        border-right: 1px solid $dark-color;
-        margin: 0 10px;
-        width: 32px;
-        height: 30px;
-
-        button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-top: 1px solid $gray-color;
-            border-left: 1px solid $gray-color;
-            border-bottom: 1px solid $dark-gray-color;
-            border-right: 1px solid $dark-gray-color;
-            padding: 0;
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
-        }
     }
 }

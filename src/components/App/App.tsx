@@ -1,4 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { generateBoard } from '../../helpers/generateBoard';
+
+import Cell from '../Cell/Cell';
 
 import gameIcon from '../../assets/images/game-icon.svg';
 
@@ -8,6 +12,18 @@ import './app.css';
 // /. imports
 
 const App: React.FC = () => {
+    const [board, setBoard] = useState<any[]>([]);
+
+    // /. hooks
+
+    useEffect(() => {
+        const newBoard = generateBoard(10, 10, 10);
+        // console.log(newBoard);
+        setBoard(newBoard);
+    }, []);
+
+    // /. effects
+
     return (
         <div className="App">
             <div className="board">
@@ -296,7 +312,17 @@ const App: React.FC = () => {
                                 <span>015</span>
                             </div>
                         </div>
-                        <div className="board__playground"></div>
+                        <div className="board__playground">
+                            {board.map(row => {
+                                return row.map((field: any) => {
+                                    return (
+                                        <Cell key={field.id}>
+                                            {field.value}
+                                        </Cell>
+                                    );
+                                });
+                            })}
+                        </div>
                     </section>
                 </div>
             </div>

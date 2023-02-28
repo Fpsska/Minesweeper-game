@@ -86,13 +86,11 @@ body {
     }
 
     &__playground {
-        width: 256px;
-        height: 256px;
+        width: 400px;
+        height: 400px;
         background-color: $white-color;
-        display: grid;
-        grid-template-columns: repeat((var(--size), 16px));
-        grid-template-rows: repeat((var(--size), 16px));
-        grid-gap: 4px;
+        display: flex;
+        flex-wrap: wrap;
     }
 }
 

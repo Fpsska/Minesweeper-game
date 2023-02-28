@@ -3,15 +3,15 @@ import { createSlice } from '@reduxjs/toolkit';
 // /. imports
 
 interface IboardSlice {
-    bombsCount: number;
     colCount: number;
     rowCount: number;
+    bombsCount: number;
 }
 
 const initialState: IboardSlice = {
-    bombsCount: 10,
-    colCount: 10,
-    rowCount: 10
+    colCount: 16,
+    rowCount: 16,
+    bombsCount: 10
 };
 
 const boardSlice = createSlice({

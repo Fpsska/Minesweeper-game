@@ -3,9 +3,9 @@
 // /. imports
 
 .playground-area {
-    width: 400px;
-    height: 400px;
-    background-color: $white-color;
-    display: flex;
-    flex-wrap: wrap;
+    background-color: $dark-color;
+    display: grid;
+    grid-template-columns: repeat(var(--size), minmax(40px, 1fr));
+    grid-template-rows: repeat(var(--size), 40px);
+    gap: 1px;
 }

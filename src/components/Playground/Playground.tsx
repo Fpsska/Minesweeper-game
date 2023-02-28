@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { useAppSelector } from '../../app/hooks';
 
@@ -19,7 +19,13 @@ const Playground: React.FC = () => {
 
     const [board, setBoard] = useState<Irow[][]>([]);
 
+    const playgroundRef = useRef<HTMLDivElement>(null!);
+
     // /. hooks
+
+    useEffect(() => {
+        playgroundRef.current.style.setProperty('--size', String(colCount));
+    }, [colCount]);
 
     useEffect(() => {
         const newBoard = generateBoard(colCount, rowCount, bombsCount);
@@ -28,8 +34,12 @@ const Playground: React.FC = () => {
     }, [colCount, rowCount, bombsCount]);
 
     // /. effects
+
     return (
-        <div className="board__playground-area">
+        <div
+            className="playground-area"
+            ref={playgroundRef}
+        >
             {board.map(row => {
                 return row.map((field: Irow) => {
                     return <Cell key={field.id}>{field.value}</Cell>;

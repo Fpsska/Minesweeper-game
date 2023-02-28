@@ -1,0 +1,25 @@
+@font-face {
+    font-family: "MS Sans Serif";
+    src:
+        local('MS-Sans-Serif-Regular'),
+        local('MS Sans Serif Regular'),
+        url('../fonts/MS-Sans-Serif-Regular.woff2'),
+        url('../fonts/MS-Sans-Serif-Regular.woff'),
+        url('../fonts/MS-Sans-Serif-Regular.ttf');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Minecraft";
+    src:
+        local('Minecraft-Bold'),
+        local('Minecraft Bold'),
+        url('../fonts/Minecraft-Bold.woff2'),
+        url('../fonts/Minecraft-Bold.woff'),
+        url('../fonts/Minecraft-Bold.otf');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}

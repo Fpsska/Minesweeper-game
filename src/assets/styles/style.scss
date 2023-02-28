@@ -1,5 +1,6 @@
 @import './vars';
 @import './reset';
+@import './fonts';
 
 // /. imports
 
@@ -54,24 +55,25 @@ body {
         display: flex;
         align-items: center;
         background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
-        padding: 2px 3px;
+        padding: 4px 8px;
     }
 
     &__image {
         display: flex;
-        flex: 0 0 12px;
-        height: 12px;
+        flex: 0 0 16px;
+        height: 16px;
         overflow: hidden;
         margin-right: 5px;
     }
 
     &__name {
-        font-size: 11px;
+        font-size: 16px;
         color: $white-color;
+        font-weight: 400;
     }
 
     &__body {
-        padding: 10px;
+        padding: 20px;
         border-top: 2px solid $white-color;
         border-left: 2px solid $white-color;
         border-bottom: 2px solid $dark-gray-color;
@@ -98,7 +100,7 @@ body {
 
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    padding: 14px;
     border-top: 2px solid $dark-gray-color;
     border-left: 2px solid $dark-gray-color;
     border-bottom: 2px solid $white-color;
@@ -108,19 +110,24 @@ body {
     &__timer {
 
         background-color: $dark-color;
-        color: $red-color;
-        font-size: 18px;
-        font-weight: 600;
         border-top: 1px solid $dark-color;
         border-left: 1px solid $dark-color;
         border-bottom: 1px solid $white-color;
         border-right: 1px solid $white-color;
+        height: 30px;
 
         span {
+            padding: 2px;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
             height: 100%;
+            color: $red-color;
+            font-family: 'Minecraft', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1;
             border-top: 1px solid $dark-gray-color;
             border-left: 1px solid $dark-gray-color;
             border-bottom: 1px solid $gray-color;
@@ -134,6 +141,8 @@ body {
         border-bottom: 1px solid $dark-color;
         border-right: 1px solid $dark-color;
         margin: 0 10px;
+        width: 32px;
+        height: 30px;
 
         button {
             display: flex;
@@ -145,6 +154,8 @@ body {
             border-right: 1px solid $dark-gray-color;
             padding: 0;
             cursor: pointer;
+            width: 100%;
+            height: 100%;
         }
     }
 }

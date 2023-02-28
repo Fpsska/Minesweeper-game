@@ -84,14 +84,6 @@ body {
         background-color: $gray-color;
         margin-bottom: 10px;
     }
-
-    &__playground {
-        width: 400px;
-        height: 400px;
-        background-color: $white-color;
-        display: flex;
-        flex-wrap: wrap;
-    }
 }
 
 .information {

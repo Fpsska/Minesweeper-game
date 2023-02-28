@@ -1,17 +1,8 @@
+import { Irow } from '../Types/boardTypes';
+
 import { getRandomNum } from './getRandomNum';
 
 // /. imports
-
-interface Irow {
-    id: number;
-    x: number;
-    y: number;
-    value: any;
-    IsFlipped: boolean;
-    isFlagged: boolean;
-}
-
-// /. interfaces
 
 export function generateBoard(
     row: number,

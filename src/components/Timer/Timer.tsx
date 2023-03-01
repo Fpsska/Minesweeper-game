@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import { useAppSelector } from '../../app/hooks';
 
+import { convertTimerValue } from '../../helpers/convertTimerValue';
+
 // /. imports
 
 const Timer: React.FC = () => {
@@ -32,7 +34,7 @@ const Timer: React.FC = () => {
 
     // /. effects
 
-    return <>{time < 10 ? `00${time}` : time > 10 ? `0${time}` : time}</>;
+    return <>{convertTimerValue(time)}</>;
 };
 
 export default Timer;

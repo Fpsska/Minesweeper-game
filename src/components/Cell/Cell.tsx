@@ -1,4 +1,3 @@
-import { isFulfilled } from '@reduxjs/toolkit';
 import React, { useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
@@ -11,12 +10,14 @@ import {
     openBombsMap
 } from '../../app/slices/boardSlice';
 
+import { determineColorByNumber } from '../../helpers/determineNumberColor';
+
 import './cell.scss';
 
 // /. imports
 
 interface propTypes {
-    children: string | number;
+    children: JSX.Element;
     id: string;
     value: string | number;
     isFlipped: boolean;
@@ -41,6 +42,7 @@ const Cell: React.FC<propTypes> = props => {
     } = props;
 
     const { boardData, isGameOver } = useAppSelector(state => state.boardSlice);
+    const [color, setColor] = useState<string>('');
 
     const dispatch = useAppDispatch();
 
@@ -217,6 +219,12 @@ const Cell: React.FC<propTypes> = props => {
 
     // /. functions
 
+    useEffect(() => {
+        if (typeof value === 'number') {
+            setColor(determineColorByNumber(value));
+        }
+    }, [value]);
+
     return (
         <button
             className={`cell ${isNumberVisible ? 'flipped' : ''} ${
@@ -224,9 +232,10 @@ const Cell: React.FC<propTypes> = props => {
             } ${isExploded ? 'exploded' : ''} ${isFlagged ? 'marked' : ''}`}
             type="button"
             aria-label={isNumberVisible ? '' : 'open field'}
+            disabled={isFlipped || isGameOver}
+            style={{ color }}
             onContextMenu={e => onCellRightClick(e)}
             onClick={onCellLeftClick}
-            disabled={isFlipped || isGameOver}
         >
             {isNumberVisible
                 ? children

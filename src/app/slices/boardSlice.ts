@@ -16,7 +16,7 @@ const initialState: IboardSlice = {
     boardData: [],
     colCount: 16,
     rowCount: 16,
-    bombsCount: 50,
+    bombsCount: 40,
     isGameOver: false
 };
 

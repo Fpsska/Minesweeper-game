@@ -40,7 +40,7 @@ const Cell: React.FC<propTypes> = props => {
         isExploded
     } = props;
 
-    const { boardData } = useAppSelector(state => state.boardSlice);
+    const { boardData, isGameOver } = useAppSelector(state => state.boardSlice);
 
     const dispatch = useAppDispatch();
 
@@ -68,7 +68,7 @@ const Cell: React.FC<propTypes> = props => {
         e.preventDefault();
         console.log('RightClick');
 
-        if (isFlipped) return;
+        if (isFlipped || isGameOver) return;
 
         dispatch(switchFlaggedStatus({ id, status: true }));
         if (isFlagged) {
@@ -226,7 +226,7 @@ const Cell: React.FC<propTypes> = props => {
             aria-label={isNumberVisible ? '' : 'open field'}
             onContextMenu={e => onCellRightClick(e)}
             onClick={onCellLeftClick}
-            disabled={isFlipped}
+            disabled={isFlipped || isGameOver}
         >
             {isNumberVisible
                 ? children

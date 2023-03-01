@@ -1,6 +1,13 @@
 import React from 'react';
 
-import { useAppSelector } from '../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+
+import {
+    setBoardData,
+    switchGameOverStatus
+} from '../../app/slices/boardSlice';
+
+import { generateBoard } from '../../helpers/generateBoard';
 
 import Timer from '../Timer/Timer';
 
@@ -13,11 +20,22 @@ import './interface.scss';
 // /. imports
 
 const Interface: React.FC = () => {
-    const { bombsCount, isGameOver } = useAppSelector(
+    const { bombsCount, colCount, rowCount, isGameOver } = useAppSelector(
         state => state.boardSlice
     );
 
+    const dispatch = useAppDispatch();
+
     // /. hooks
+
+    const onButtonStatusClick = (): void => {
+        dispatch(switchGameOverStatus({ status: false }));
+
+        const newBoard = generateBoard(colCount, rowCount, bombsCount);
+        dispatch(setBoardData(newBoard));
+    };
+
+    // /. functions
 
     return (
         <div className="board__information information">
@@ -33,6 +51,7 @@ const Interface: React.FC = () => {
                             isGameOver ? loseIcon : defaultIcon
                         }")`
                     }}
+                    onClick={() => isGameOver && onButtonStatusClick()}
                 ></button>
             </div>
             <div className="information__timer">

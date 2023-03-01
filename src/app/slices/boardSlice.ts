@@ -32,7 +32,7 @@ const boardSlice = createSlice({
             // /. payload
 
             const rowsData = state.boardData.flat(1);
-            const targetField = rowsData.find(filed => filed.id === id);
+            const targetField = rowsData.find(field => field.id === id);
             if (targetField) {
                 targetField.isFlipped = true;
             }
@@ -45,7 +45,7 @@ const boardSlice = createSlice({
             // /. payload
 
             const rowsData = state.boardData.flat(1);
-            const targetField = rowsData.find(filed => filed.id === id);
+            const targetField = rowsData.find(field => field.id === id);
             if (targetField) {
                 targetField.isFlagged = status;
             }
@@ -58,7 +58,7 @@ const boardSlice = createSlice({
             // /. payload
 
             const rowsData = state.boardData.flat(1);
-            const targetField = rowsData.find(filed => filed.id === id);
+            const targetField = rowsData.find(field => field.id === id);
             if (targetField) {
                 targetField.isWarned = status;
             }
@@ -70,6 +70,23 @@ const boardSlice = createSlice({
             const { status } = action.payload;
             // /. payload
             state.isGameOver = status;
+        },
+        openBombsMap(state, action: PayloadAction<{ id: string }>) {
+            const { id } = action.payload;
+            // /. payload
+
+            const bombsData = state.boardData
+                .flat(1)
+                .filter(field => field.isBomb);
+
+            bombsData.map(field => {
+                if (field.id === id) {
+                    field.isFlipped = true;
+                    field.isExploded = true;
+                } else {
+                    field.isFlipped = true;
+                }
+            });
         }
     }
 });
@@ -79,7 +96,8 @@ export const {
     switchFlippedStatus,
     switchFlaggedStatus,
     switchWarnedStatus,
-    switchGameOverStatus
+    switchGameOverStatus,
+    openBombsMap
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

@@ -6,5 +6,6 @@ export interface Irow {
     isFlipped: boolean;
     isFlagged: boolean;
     isWarned: boolean;
-    isBomb: boolean;
+    isBomb?: boolean;
+    isExploded?: boolean;
 }

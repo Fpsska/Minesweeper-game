@@ -7,7 +7,8 @@ import {
     switchFlippedStatus,
     switchFlaggedStatus,
     switchWarnedStatus,
-    switchGameOverStatus
+    switchGameOverStatus,
+    openBombsMap
 } from '../../app/slices/boardSlice';
 
 import './cell.scss';
@@ -21,14 +22,23 @@ interface propTypes {
     isFlipped: boolean;
     isFlagged: boolean;
     isWarned: boolean;
-    isBomb: boolean;
+    isBomb?: boolean;
+    isExploded?: boolean;
 }
 
 // /. interfaces
 
 const Cell: React.FC<propTypes> = props => {
-    const { children, id, value, isFlipped, isFlagged, isWarned, isBomb } =
-        props;
+    const {
+        children,
+        id,
+        value,
+        isFlipped,
+        isFlagged,
+        isWarned,
+        isBomb,
+        isExploded
+    } = props;
 
     const { boardData } = useAppSelector(state => state.boardSlice);
 
@@ -43,12 +53,13 @@ const Cell: React.FC<propTypes> = props => {
 
     const onCellLeftClick = (): void => {
         console.log('LeftClick');
-        console.log(boardData);
+        // console.log(boardData);
         if (!isFlagged && !isWarned) {
             dispatch(switchFlippedStatus({ id }));
         }
         if (isBomb) {
             dispatch(switchGameOverStatus({ status: true }));
+            dispatch(openBombsMap({ id }));
             console.log('bomb');
         }
     };
@@ -209,8 +220,8 @@ const Cell: React.FC<propTypes> = props => {
     return (
         <button
             className={`cell ${isNumberVisible ? 'flipped' : ''} ${
-                isBombVisible ? 'exploded' : ''
-            } ${isFlagged ? 'marked' : ''}`}
+                isBombVisible ? 'bomb' : ''
+            } ${isExploded ? 'exploded' : ''} ${isFlagged ? 'marked' : ''}`}
             type="button"
             aria-label={isNumberVisible ? '' : 'open field'}
             onContextMenu={e => onCellRightClick(e)}

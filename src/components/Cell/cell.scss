@@ -62,6 +62,11 @@
     border: none;
 }
 
+.cell.bomb {
+    border: none;
+    background-color: $gray-color;
+}
+
 .cell.exploded {
     background-color: $red-color;
     border: 2px dashed $dark-color;

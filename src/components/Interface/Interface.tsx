@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import {
     setBoardData,
-    switchGameOverStatus
+    switchGameOverStatus,
+    switchEmojiStatuses
 } from '../../app/slices/boardSlice';
 
 import { generateBoard } from '../../helpers/generateBoard';
+import { convertTimerValue } from '../../helpers/convertTimerValue';
 
 import Timer from '../Timer/Timer';
 
 import defaultIcon from '../../assets/images/default_emoji-icon.svg';
+import scaredIcon from '../../assets/images/scared_emoji-icon.svg';
 import loseIcon from '../../assets/images/lose_emoji-icon.svg';
 import winIcon from '../../assets/images/win_emoji-icon.svg';
 
@@ -20,9 +23,17 @@ import './interface.scss';
 // /. imports
 
 const Interface: React.FC = () => {
-    const { bombsCount, colCount, rowCount, isGameOver } = useAppSelector(
-        state => state.boardSlice
-    );
+    const { bombsCount, colCount, rowCount, isGameOver, currentEmoji } =
+        useAppSelector(state => state.boardSlice);
+
+    const [emojiStatuses] = useState<{ [key: string]: string }>({
+        happy: defaultIcon,
+        cool: winIcon,
+        sad: loseIcon,
+        scared: scaredIcon
+    });
+
+    const isButtonAvailable = isGameOver && currentEmoji === 'sad';
 
     const dispatch = useAppDispatch();
 
@@ -30,6 +41,7 @@ const Interface: React.FC = () => {
 
     const onButtonStatusClick = (): void => {
         dispatch(switchGameOverStatus({ status: false }));
+        dispatch(switchEmojiStatuses('happy'));
 
         const newBoard = generateBoard(colCount, rowCount, bombsCount);
         dispatch(setBoardData(newBoard));
@@ -40,18 +52,16 @@ const Interface: React.FC = () => {
     return (
         <div className="board__information information">
             <div className="information__bombs-count">
-                <span>{bombsCount < 100 ? `0${bombsCount}` : bombsCount}</span>
+                <span>{convertTimerValue(bombsCount)}</span>
             </div>
             <div className="information__status">
                 <button
                     type="button"
                     aria-label="restart game"
                     style={{
-                        backgroundImage: `url("${
-                            isGameOver ? loseIcon : defaultIcon
-                        }")`
+                        backgroundImage: `url("${emojiStatuses[currentEmoji]}")`
                     }}
-                    onClick={() => isGameOver && onButtonStatusClick()}
+                    onClick={() => isButtonAvailable && onButtonStatusClick()}
                 ></button>
             </div>
             <div className="information__timer">

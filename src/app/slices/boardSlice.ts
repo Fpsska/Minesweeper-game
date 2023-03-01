@@ -10,6 +10,7 @@ interface IboardSlice {
     rowCount: number;
     bombsCount: number;
     isGameOver: boolean;
+    currentEmoji: string;
 }
 
 const initialState: IboardSlice = {
@@ -17,7 +18,8 @@ const initialState: IboardSlice = {
     colCount: 16,
     rowCount: 16,
     bombsCount: 40,
-    isGameOver: false
+    isGameOver: false,
+    currentEmoji: 'happy'
 };
 
 const boardSlice = createSlice({
@@ -71,6 +73,9 @@ const boardSlice = createSlice({
             // /. payload
             state.isGameOver = status;
         },
+        switchEmojiStatuses(state, action: PayloadAction<string>) {
+            state.currentEmoji = action.payload;
+        },
         openBombsMap(state, action: PayloadAction<{ id: string }>) {
             const { id } = action.payload;
             // /. payload
@@ -97,6 +102,7 @@ export const {
     switchFlaggedStatus,
     switchWarnedStatus,
     switchGameOverStatus,
+    switchEmojiStatuses,
     openBombsMap
 } = boardSlice.actions;
 

@@ -7,6 +7,7 @@ import {
     switchFlaggedStatus,
     switchWarnedStatus,
     switchGameOverStatus,
+    switchEmojiStatuses,
     openBombsMap
 } from '../../app/slices/boardSlice';
 
@@ -44,14 +45,14 @@ const Cell: React.FC<propTypes> = props => {
     const { boardData, isGameOver } = useAppSelector(state => state.boardSlice);
     const [color, setColor] = useState<string>('');
 
-    const dispatch = useAppDispatch();
-
-    // /. hooks
-
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
     const isBombVisible = isFlipped && isBomb && typeof value === 'string';
     const isNumberVisible =
         isFlipped && !isFlagged && !isWarned && !isBombVisible;
+
+    const dispatch = useAppDispatch();
+
+    // /. hooks
 
     const onCellLeftClick = (): void => {
         console.log('LeftClick');
@@ -62,6 +63,7 @@ const Cell: React.FC<propTypes> = props => {
         if (isBomb) {
             dispatch(switchGameOverStatus({ status: true }));
             dispatch(openBombsMap({ id }));
+            dispatch(switchEmojiStatuses('sad'));
             console.log('bomb');
         }
     };
@@ -81,6 +83,16 @@ const Cell: React.FC<propTypes> = props => {
             dispatch(switchFlaggedStatus({ id, status: false }));
             dispatch(switchWarnedStatus({ id, status: false }));
         }
+    };
+
+    const onMouseDown = (e: React.MouseEvent): void => {
+        if (e.button === 2 || isFlagged || isWarned) return;
+        dispatch(switchEmojiStatuses('scared'));
+    };
+
+    const onMouseUp = (e: React.MouseEvent): void => {
+        if (e.button === 2 || isFlagged || isWarned) return;
+        dispatch(switchEmojiStatuses('happy'));
     };
 
     const flagIcon = (
@@ -225,6 +237,8 @@ const Cell: React.FC<propTypes> = props => {
         }
     }, [value]);
 
+    // /. effects
+
     return (
         <button
             className={`cell ${isNumberVisible ? 'flipped' : ''} ${
@@ -235,6 +249,8 @@ const Cell: React.FC<propTypes> = props => {
             disabled={isFlipped || isGameOver}
             style={{ color }}
             onContextMenu={e => onCellRightClick(e)}
+            onMouseDown={e => onMouseDown(e)}
+            onMouseUp={onMouseUp}
             onClick={onCellLeftClick}
         >
             {isNumberVisible

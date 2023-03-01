@@ -20,9 +20,10 @@ export function generateBoard(
                 x,
                 y,
                 value: 0,
-                IsFlipped: false,
+                isFlipped: false,
                 isFlagged: false,
-                isWarned: false
+                isWarned: false,
+                isBomb: false
             });
         }
         board.push(rowArray);
@@ -36,6 +37,7 @@ export function generateBoard(
 
         if (board[x][y].value === 0) {
             board[x][y].value = 'B';
+            board[x][y].isBomb = true;
             bombsCounter++;
         }
     }

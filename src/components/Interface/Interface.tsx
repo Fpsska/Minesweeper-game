@@ -4,12 +4,18 @@ import { useAppSelector } from '../../app/hooks';
 
 import Timer from '../Timer/Timer';
 
+import defaultIcon from '../../assets/images/default_emoji-icon.svg';
+import loseIcon from '../../assets/images/lose_emoji-icon.svg';
+import winIcon from '../../assets/images/win_emoji-icon.svg';
+
 import './interface.scss';
 
 // /. imports
 
 const Interface: React.FC = () => {
-    const { bombsCount } = useAppSelector(state => state.boardSlice);
+    const { bombsCount, isGameOver } = useAppSelector(
+        state => state.boardSlice
+    );
 
     // /. hooks
 
@@ -22,6 +28,11 @@ const Interface: React.FC = () => {
                 <button
                     type="button"
                     aria-label="restart game"
+                    style={{
+                        backgroundImage: `url("${
+                            isGameOver ? loseIcon : defaultIcon
+                        }")`
+                    }}
                 ></button>
             </div>
             <div className="information__timer">

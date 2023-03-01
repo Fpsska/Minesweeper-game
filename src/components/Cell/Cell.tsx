@@ -1,11 +1,13 @@
-import React from 'react';
+import { isFulfilled } from '@reduxjs/toolkit';
+import React, { useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import {
     switchFlippedStatus,
     switchFlaggedStatus,
-    switchWarnedStatus
+    switchWarnedStatus,
+    switchGameOverStatus
 } from '../../app/slices/boardSlice';
 
 import './cell.scss';
@@ -13,43 +15,55 @@ import './cell.scss';
 // /. imports
 
 interface propTypes {
-    children: number;
+    children: string | number;
     id: string;
+    value: string | number;
     isFlipped: boolean;
     isFlagged: boolean;
     isWarned: boolean;
+    isBomb: boolean;
 }
 
 // /. interfaces
 
-const Cell: React.FC<propTypes> = ({
-    children,
-    id,
-    isFlipped,
-    isFlagged,
-    isWarned
-}) => {
+const Cell: React.FC<propTypes> = props => {
+    const { children, id, value, isFlipped, isFlagged, isWarned, isBomb } =
+        props;
+
     const { boardData } = useAppSelector(state => state.boardSlice);
 
     const dispatch = useAppDispatch();
 
     // /. hooks
 
-    const isFlagAllowed = !isFlipped && isFlagged && !isWarned;
+    const isFlagVisible = !isFlipped && isFlagged && !isWarned;
+    const isBombVisible = isFlipped && isBomb && typeof value === 'string';
+    const isNumberVisible =
+        isFlipped && !isFlagged && !isWarned && !isBombVisible;
 
     const onCellLeftClick = (): void => {
+        console.log('LeftClick');
+        console.log(boardData);
         if (!isFlagged && !isWarned) {
             dispatch(switchFlippedStatus({ id }));
+        }
+        if (isBomb) {
+            dispatch(switchGameOverStatus({ status: true }));
         }
     };
 
     const onCellRightClick = (e: React.MouseEvent): void => {
         e.preventDefault();
+        console.log('RightClick');
+
+        if (isFlipped) return;
+
         dispatch(switchFlaggedStatus({ id, status: true }));
         if (isFlagged) {
             dispatch(switchFlaggedStatus({ id, status: false }));
             dispatch(switchWarnedStatus({ id, status: true }));
-        } else if (!isFlagged && isWarned) {
+        }
+        if (!isFlagged && isWarned) {
             dispatch(switchFlaggedStatus({ id, status: false }));
             dispatch(switchWarnedStatus({ id, status: false }));
         }
@@ -104,23 +118,110 @@ const Cell: React.FC<propTypes> = ({
         </svg>
     );
 
+    const bombIcon = (
+        <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <rect
+                x="7.8938"
+                y="3"
+                width="0.815642"
+                height="10.6034"
+                fill="black"
+            />
+            <rect
+                x="13.6033"
+                y="7.8938"
+                width="0.815642"
+                height="10.6034"
+                transform="rotate(90 13.6033 7.8938)"
+                fill="black"
+            />
+            <rect
+                x="6.26245"
+                y="4.63135"
+                width="4.07821"
+                height="7.34078"
+                fill="black"
+            />
+            <rect
+                x="11.9722"
+                y="6.26245"
+                width="4.07821"
+                height="7.34078"
+                transform="rotate(90 11.9722 6.26245)"
+                fill="black"
+            />
+            <rect
+                x="5.44702"
+                y="5.44702"
+                width="5.7095"
+                height="5.7095"
+                fill="black"
+            />
+            <rect
+                x="11.1565"
+                y="4.63135"
+                width="0.815642"
+                height="0.815642"
+                fill="black"
+            />
+            <rect
+                x="11.1565"
+                y="11.1565"
+                width="0.815642"
+                height="0.815642"
+                fill="black"
+            />
+            <rect
+                x="4.63135"
+                y="4.63135"
+                width="0.815642"
+                height="0.815642"
+                fill="black"
+            />
+            <rect
+                x="4.63135"
+                y="11.1565"
+                width="0.815642"
+                height="0.815642"
+                fill="black"
+            />
+            <rect
+                x="6.26245"
+                y="6.26245"
+                width="1.63128"
+                height="1.63128"
+                fill="white"
+            />
+        </svg>
+    );
+
     // /. functions
 
     return (
         <button
-            className="cell"
+            className={`cell ${isNumberVisible ? 'flipped' : ''} ${
+                isBombVisible ? 'exploded' : ''
+            } ${isFlagged ? 'marked' : ''}`}
             type="button"
-            aria-label="open tile"
+            aria-label={isNumberVisible ? '' : 'open field'}
             onContextMenu={e => onCellRightClick(e)}
             onClick={onCellLeftClick}
             disabled={isFlipped}
         >
-            {isFlipped
+            {isNumberVisible
                 ? children
-                : isFlagAllowed
+                : isFlagVisible
                 ? flagIcon
                 : isWarned
                 ? '?'
+                : isBombVisible
+                ? bombIcon
                 : ''}
         </button>
     );

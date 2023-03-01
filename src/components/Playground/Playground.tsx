@@ -46,10 +46,7 @@ const Playground: React.FC = () => {
                     return (
                         <Cell
                             key={field.id}
-                            id={field.id}
-                            isFlipped={field.IsFlipped}
-                            isFlagged={field.isFlagged}
-                            isWarned={field.isWarned}
+                            {...field}
                         >
                             {field.value}
                         </Cell>

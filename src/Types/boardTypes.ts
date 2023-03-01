@@ -3,7 +3,8 @@ export interface Irow {
     x: number;
     y: number;
     value: any;
-    IsFlipped: boolean;
+    isFlipped: boolean;
     isFlagged: boolean;
     isWarned: boolean;
+    isBomb: boolean;
 }

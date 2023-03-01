@@ -9,13 +9,15 @@ interface IboardSlice {
     colCount: number;
     rowCount: number;
     bombsCount: number;
+    isGameOver: boolean;
 }
 
 const initialState: IboardSlice = {
     boardData: [],
     colCount: 16,
     rowCount: 16,
-    bombsCount: 10
+    bombsCount: 50,
+    isGameOver: false
 };
 
 const boardSlice = createSlice({
@@ -32,7 +34,7 @@ const boardSlice = createSlice({
             const rowsData = state.boardData.flat(1);
             const targetField = rowsData.find(filed => filed.id === id);
             if (targetField) {
-                targetField.IsFlipped = true;
+                targetField.isFlipped = true;
             }
         },
         switchFlaggedStatus(
@@ -60,6 +62,14 @@ const boardSlice = createSlice({
             if (targetField) {
                 targetField.isWarned = status;
             }
+        },
+        switchGameOverStatus(
+            state,
+            action: PayloadAction<{ status: boolean }>
+        ) {
+            const { status } = action.payload;
+            // /. payload
+            state.isGameOver = status;
         }
     }
 });
@@ -68,7 +78,8 @@ export const {
     setBoardData,
     switchFlippedStatus,
     switchFlaggedStatus,
-    switchWarnedStatus
+    switchWarnedStatus,
+    switchGameOverStatus
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

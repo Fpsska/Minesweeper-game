@@ -49,6 +49,7 @@ const Cell: React.FC<propTypes> = props => {
         }
         if (isBomb) {
             dispatch(switchGameOverStatus({ status: true }));
+            console.log('bomb');
         }
     };
 
@@ -71,6 +72,7 @@ const Cell: React.FC<propTypes> = props => {
 
     const flagIcon = (
         <svg
+            className="flag-icon"
             width="8"
             height="10"
             viewBox="0 0 8 10"
@@ -120,6 +122,7 @@ const Cell: React.FC<propTypes> = props => {
 
     const bombIcon = (
         <svg
+            className="bomb-icon"
             width="16"
             height="16"
             viewBox="0 0 16 16"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
@@ -43,9 +43,7 @@ const Cell: React.FC<propTypes> = props => {
         isExploded
     } = props;
 
-    const { boardData, isGameOver, bombsCount } = useAppSelector(
-        state => state.boardSlice
-    );
+    const { boardData, isGameOver } = useAppSelector(state => state.boardSlice);
     const [color, setColor] = useState<string>('');
 
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
@@ -54,12 +52,15 @@ const Cell: React.FC<propTypes> = props => {
         isFlipped && !isFlagged && !isWarned && !isBombVisible;
 
     const dispatch = useAppDispatch();
+    const cellRef = useRef<HTMLButtonElement>(null!);
 
     // /. hooks
 
     const onCellLeftClick = (): void => {
         console.log('LeftClick');
         // console.log(boardData);
+        if (isFlagged || isWarned) return;
+
         if (!isFlagged && !isWarned) {
             dispatch(switchFlippedStatus({ id }));
         }
@@ -237,10 +238,12 @@ const Cell: React.FC<propTypes> = props => {
 
     useEffect(() => {
         // set color for current cell element
-        if (typeof value === 'number') {
+        const isColorAllowed = typeof value === 'number' && isNumberVisible;
+
+        if (isColorAllowed) {
             setColor(determineColorByNumber(value));
         }
-    }, [value]);
+    }, [value, isNumberVisible]);
 
     useEffect(() => {
         // decrement bombCounter when user is flagging a bomb
@@ -253,6 +256,7 @@ const Cell: React.FC<propTypes> = props => {
 
     return (
         <button
+            ref={cellRef}
             className={`cell ${isNumberVisible ? 'flipped' : ''} ${
                 isBombVisible ? 'bomb' : ''
             } ${isExploded ? 'exploded' : ''} ${isFlagged ? 'marked' : ''}`}

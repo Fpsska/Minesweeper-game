@@ -8,6 +8,7 @@ import {
     switchWarnedStatus,
     switchGameOverStatus,
     switchEmojiStatuses,
+    decrementBombsCount,
     openBombsMap
 } from '../../app/slices/boardSlice';
 
@@ -42,7 +43,9 @@ const Cell: React.FC<propTypes> = props => {
         isExploded
     } = props;
 
-    const { boardData, isGameOver } = useAppSelector(state => state.boardSlice);
+    const { boardData, isGameOver, bombsCount } = useAppSelector(
+        state => state.boardSlice
+    );
     const [color, setColor] = useState<string>('');
 
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
@@ -64,6 +67,7 @@ const Cell: React.FC<propTypes> = props => {
             dispatch(switchGameOverStatus({ status: true }));
             dispatch(openBombsMap({ id }));
             dispatch(switchEmojiStatuses('sad'));
+            dispatch(decrementBombsCount());
             console.log('bomb');
         }
     };
@@ -232,10 +236,18 @@ const Cell: React.FC<propTypes> = props => {
     // /. functions
 
     useEffect(() => {
+        // set color for current cell element
         if (typeof value === 'number') {
             setColor(determineColorByNumber(value));
         }
     }, [value]);
+
+    useEffect(() => {
+        // decrement bombCounter when user is flagging a bomb
+        if (isFlagged && isBomb) {
+            dispatch(decrementBombsCount());
+        }
+    }, [isBomb, isFlagged]);
 
     // /. effects
 

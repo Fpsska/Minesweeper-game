@@ -92,6 +92,9 @@ const boardSlice = createSlice({
                     field.isFlipped = true;
                 }
             });
+        },
+        decrementBombsCount(state) {
+            state.bombsCount -= 1;
         }
     }
 });
@@ -103,7 +106,8 @@ export const {
     switchWarnedStatus,
     switchGameOverStatus,
     switchEmojiStatuses,
-    openBombsMap
+    openBombsMap,
+    decrementBombsCount
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

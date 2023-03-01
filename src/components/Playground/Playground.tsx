@@ -32,7 +32,7 @@ const Playground: React.FC = () => {
     useEffect(() => {
         const newBoard = generateBoard(colCount, rowCount, bombsCount);
         dispatch(setBoardData(newBoard));
-    }, [colCount, rowCount, bombsCount]);
+    }, [colCount, rowCount]);
 
     // /. effects
 

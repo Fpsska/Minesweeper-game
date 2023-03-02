@@ -7,6 +7,7 @@ import {
     switchFlaggedStatus,
     switchWarnedStatus,
     switchDefusedStatus,
+    setCurrentCellValue,
     switchGameOverStatus,
     switchEmojiStatuses,
     calcBombsCount,
@@ -14,6 +15,7 @@ import {
     openBombsMap
 } from '../../app/slices/boardSlice';
 
+import { findAdjacentFileds } from '../../utils/findAdjacentFileds';
 import { determineColorByNumber } from '../../utils/helpers/determineNumberColor';
 
 import './cell.scss';
@@ -24,6 +26,8 @@ interface propTypes {
     children: JSX.Element;
     id: string;
     value: string | number;
+    x: number;
+    y: number;
     isFlipped: boolean;
     isFlagged: boolean;
     isWarned: boolean;
@@ -38,6 +42,8 @@ const Cell: React.FC<propTypes> = props => {
         children,
         id,
         value,
+        x,
+        y,
         isFlipped,
         isFlagged,
         isWarned,
@@ -49,7 +55,7 @@ const Cell: React.FC<propTypes> = props => {
     const [color, setColor] = useState<string>('');
 
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
-    const isBombVisible = isFlipped && isBomb && typeof value === 'string';
+    const isBombVisible = isFlipped && isBomb; //  && typeof value === 'string'
     const isNumberVisible =
         isFlipped && !isFlagged && !isWarned && !isBombVisible;
 
@@ -59,11 +65,24 @@ const Cell: React.FC<propTypes> = props => {
 
     const onCellLeftClick = (): void => {
         console.log('LeftClick');
-        console.log(boardData);
+        // console.log(boardData);
         if (isFlagged || isWarned) return;
 
-        if (!isFlagged && !isWarned) {
+        if (!isFlagged && !isWarned && !isBomb) {
             dispatch(switchFlippedStatus({ id }));
+
+            const neighboredFields = findAdjacentFileds(boardData, x, y);
+            const neighboredBombs = neighboredFields.filter(
+                field => field.isBomb
+            );
+            if (neighboredBombs.length !== 0) {
+                dispatch(
+                    setCurrentCellValue({
+                        id,
+                        value: neighboredBombs.length
+                    })
+                );
+            }
         }
         if (isBomb) {
             dispatch(switchGameOverStatus({ status: true }));

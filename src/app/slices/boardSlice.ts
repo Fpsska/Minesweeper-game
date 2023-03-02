@@ -76,6 +76,20 @@ const boardSlice = createSlice({
                 targetField.isDefused = status;
             }
         },
+        setCurrentCellValue(
+            state,
+            action: PayloadAction<{ id: string; value: string | number }>
+        ) {
+            const { id, value } = action.payload;
+            console.log(value);
+            // /. payload
+
+            const rowsData = state.boardData.flat(1);
+            const targetField = rowsData.find(field => field.id === id);
+            if (targetField) {
+                targetField.value = value;
+            }
+        },
         switchGameOverStatus(
             state,
             action: PayloadAction<{ status: boolean }>
@@ -123,6 +137,7 @@ export const {
     switchFlaggedStatus,
     switchWarnedStatus,
     switchDefusedStatus,
+    setCurrentCellValue,
     switchGameOverStatus,
     switchEmojiStatuses,
     openBombsMap,

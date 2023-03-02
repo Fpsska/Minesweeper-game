@@ -65,6 +65,19 @@ const boardSlice = createSlice({
                 targetField.isWarned = status;
             }
         },
+        switchDefusedStatus(
+            state,
+            action: PayloadAction<{ id: string; status: boolean }>
+        ) {
+            const { id, status } = action.payload;
+            // /. payload
+
+            const rowsData = state.boardData.flat(1);
+            const targetField = rowsData.find(field => field.id === id);
+            if (targetField) {
+                targetField.isDefused = status;
+            }
+        },
         switchGameOverStatus(
             state,
             action: PayloadAction<{ status: boolean }>
@@ -93,6 +106,13 @@ const boardSlice = createSlice({
                 }
             });
         },
+        calcBombsCount(state) {
+            const bombsData = state.boardData
+                .flat(1)
+                .filter(field => field.isBomb);
+            const activeBombs = bombsData.filter(field => !field.isDefused);
+            state.bombsCount = activeBombs.length;
+        },
         decrementBombsCount(state) {
             state.bombsCount -= 1;
         }
@@ -104,9 +124,11 @@ export const {
     switchFlippedStatus,
     switchFlaggedStatus,
     switchWarnedStatus,
+    switchDefusedStatus,
     switchGameOverStatus,
     switchEmojiStatuses,
     openBombsMap,
+    calcBombsCount,
     decrementBombsCount
 } = boardSlice.actions;
 

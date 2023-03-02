@@ -59,7 +59,9 @@ const Interface: React.FC = () => {
                     type="button"
                     aria-label="restart game"
                     style={{
-                        backgroundImage: `url("${emojiStatuses[currentEmoji]}")`
+                        backgroundImage: `url("${
+                            emojiStatuses[currentEmoji] || defaultIcon
+                        }")`
                     }}
                     onClick={() => isButtonAvailable && onButtonStatusClick()}
                 ></button>

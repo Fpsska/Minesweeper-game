@@ -8,4 +8,5 @@ export interface Irow {
     isWarned: boolean;
     isBomb?: boolean;
     isExploded?: boolean;
+    isDefused?: boolean;
 }

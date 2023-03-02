@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
@@ -6,8 +6,10 @@ import {
     switchFlippedStatus,
     switchFlaggedStatus,
     switchWarnedStatus,
+    switchDefusedStatus,
     switchGameOverStatus,
     switchEmojiStatuses,
+    calcBombsCount,
     decrementBombsCount,
     openBombsMap
 } from '../../app/slices/boardSlice';
@@ -52,13 +54,12 @@ const Cell: React.FC<propTypes> = props => {
         isFlipped && !isFlagged && !isWarned && !isBombVisible;
 
     const dispatch = useAppDispatch();
-    const cellRef = useRef<HTMLButtonElement>(null!);
 
     // /. hooks
 
     const onCellLeftClick = (): void => {
         console.log('LeftClick');
-        // console.log(boardData);
+        console.log(boardData);
         if (isFlagged || isWarned) return;
 
         if (!isFlagged && !isWarned) {
@@ -246,17 +247,21 @@ const Cell: React.FC<propTypes> = props => {
     }, [value, isNumberVisible]);
 
     useEffect(() => {
-        // decrement bombCounter when user is flagging a bomb
+        // recalc bombCounter when user is flagging/unflagging a bomb
         if (isFlagged && isBomb) {
-            dispatch(decrementBombsCount());
+            dispatch(switchDefusedStatus({ id, status: true }));
+            dispatch(calcBombsCount());
         }
-    }, [isBomb, isFlagged]);
+        if (!isFlagged && isBomb) {
+            dispatch(switchDefusedStatus({ id, status: false }));
+            dispatch(calcBombsCount());
+        }
+    }, [isBomb, isFlagged, id]);
 
     // /. effects
 
     return (
         <button
-            ref={cellRef}
             className={`cell ${isNumberVisible ? 'flipped' : ''} ${
                 isBombVisible ? 'bomb' : ''
             } ${isExploded ? 'exploded' : ''} ${isFlagged ? 'marked' : ''}`}

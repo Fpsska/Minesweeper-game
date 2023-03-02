@@ -38,6 +38,7 @@ export function generateBoard(
             board[x][y].value = 'B';
             board[x][y].isBomb = true;
             board[x][y].isExploded = false;
+            board[x][y].isDefused = false;
             bombsCounter++;
         }
     }

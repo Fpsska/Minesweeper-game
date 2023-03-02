@@ -1,57 +1,56 @@
-import { Irow } from '../Types/boardTypes';
+import { Irow, IbombPosition } from '../Types/boardTypes';
 
-import { getRandomNum } from './getRandomNum';
 import { generateUniqueID } from './generateUniqueID';
+import { getRandomNum } from './getRandomNum';
+import { validatePositionsUnique } from './validatePositionsUnique';
 
 // /. imports
 
-export function generateBoard(
-    row: number,
-    col: number,
-    bombs: number
-): Irow[][] {
+export function generateBoard(boardSize: number, bombs: number): Irow[][] {
     const board: Irow[][] = [];
+    const bombsPositions: IbombPosition[] = getBombsPositions(boardSize, bombs);
 
-    for (let x = 0; x < row; x++) {
+    for (let x = 0; x < boardSize; x++) {
         const rowArray: Irow[] = [];
-        for (let y = 0; y < col; y++) {
+        for (let y = 0; y < boardSize; y++) {
             rowArray.push({
                 id: generateUniqueID(10),
                 x,
                 y,
-                value: 0,
+
+                // compare current bombPositions (x,y) with current rowArray position (x,y)
+                value: bombsPositions.some(
+                    validatePositionsUnique.bind(null, { x, y })
+                )
+                    ? 'B'
+                    : 0,
                 isFlipped: false,
                 isFlagged: false,
-                isWarned: false
+                isWarned: false,
+
+                // compare current bombPositions (x,y) with current rowArray position (x,y)
+                isBomb: bombsPositions.some(
+                    validatePositionsUnique.bind(null, { x, y })
+                ),
+                isExploded: false,
+                isDefused: false
             });
         }
         board.push(rowArray);
     }
     // /. generate initial fields data
 
-    let bombsCounter = 0;
-    while (bombsCounter < bombs) {
-        const x = getRandomNum(0, row - 1);
-        const y = getRandomNum(0, col - 1);
-
-        if (board[x][y].value === 0) {
-            board[x][y].value = 'B';
-            board[x][y].isBomb = true;
-            board[x][y].isExploded = false;
-            board[x][y].isDefused = false;
-            bombsCounter++;
-        }
-    }
-    // /. generate random bombs placement
-
-    for (let rowVal = 0; rowVal < row; rowVal++) {
-        for (let colVal = 0; colVal < col; colVal++) {
+    for (let rowVal = 0; rowVal < boardSize; rowVal++) {
+        for (let colVal = 0; colVal < boardSize; colVal++) {
             if (board[rowVal][colVal].value === 'B') {
                 continue;
             }
 
             // Right
-            if (colVal < col - 1 && board[rowVal][colVal + 1].value === 'B') {
+            if (
+                colVal < boardSize - 1 &&
+                board[rowVal][colVal + 1].value === 'B'
+            ) {
                 board[rowVal][colVal].value++;
             }
 
@@ -68,7 +67,7 @@ export function generateBoard(
             // Top Right
             if (
                 rowVal > 0 &&
-                colVal < col - 1 &&
+                colVal < boardSize - 1 &&
                 board[rowVal - 1][colVal + 1].value === 'B'
             ) {
                 board[rowVal][colVal].value++;
@@ -84,14 +83,17 @@ export function generateBoard(
             }
 
             // Bottom
-            if (rowVal < row - 1 && board[rowVal + 1][colVal].value === 'B') {
+            if (
+                rowVal < boardSize - 1 &&
+                board[rowVal + 1][colVal].value === 'B'
+            ) {
                 board[rowVal][colVal].value++;
             }
 
             // Bottom Right
             if (
-                rowVal < row - 1 &&
-                colVal < col - 1 &&
+                rowVal < boardSize - 1 &&
+                colVal < boardSize - 1 &&
                 board[rowVal + 1][colVal + 1].value === 'B'
             ) {
                 board[rowVal][colVal].value++;
@@ -99,7 +101,7 @@ export function generateBoard(
 
             // Bottom Left
             if (
-                rowVal < row - 1 &&
+                rowVal < boardSize - 1 &&
                 colVal > 0 &&
                 board[rowVal + 1][colVal - 1].value === 'B'
             ) {
@@ -110,4 +112,27 @@ export function generateBoard(
     // /. determine data for values of fields
 
     return board;
+}
+
+export function getBombsPositions(
+    boardSize: number,
+    bombsCount: number
+): IbombPosition[] {
+    const positions: IbombPosition[] = [];
+
+    while (positions.length < bombsCount) {
+        const bombPosition: IbombPosition = {
+            x: getRandomNum(boardSize),
+            y: getRandomNum(boardSize)
+        };
+
+        // validate by uniqueness of positions values
+        if (
+            !positions.some(pos => validatePositionsUnique(pos, bombPosition))
+        ) {
+            positions.push(bombPosition);
+        }
+    }
+
+    return positions;
 }

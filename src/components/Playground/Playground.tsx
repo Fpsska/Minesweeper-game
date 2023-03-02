@@ -15,7 +15,7 @@ import './playground.scss';
 // /. imports
 
 const Playground: React.FC = () => {
-    const { colCount, rowCount, bombsCount, boardData } = useAppSelector(
+    const { boardSize, bombsCount, boardData } = useAppSelector(
         state => state.boardSlice
     );
 
@@ -26,13 +26,13 @@ const Playground: React.FC = () => {
     // /. hooks
 
     useEffect(() => {
-        playgroundRef.current.style.setProperty('--size', String(colCount));
-    }, [colCount]);
+        playgroundRef.current.style.setProperty('--size', String(boardSize));
+    }, [boardSize]);
 
     useEffect(() => {
-        const newBoard = generateBoard(colCount, rowCount, bombsCount);
+        const newBoard = generateBoard(boardSize, bombsCount);
         dispatch(setBoardData(newBoard));
-    }, [colCount, rowCount]);
+    }, [boardSize]);
 
     // /. effects
 

@@ -6,8 +6,7 @@ import { Irow } from '../../Types/boardTypes';
 
 interface IboardSlice {
     boardData: Irow[][];
-    colCount: number;
-    rowCount: number;
+    boardSize: number;
     bombsCount: number;
     isGameOver: boolean;
     currentEmoji: string;
@@ -15,9 +14,8 @@ interface IboardSlice {
 
 const initialState: IboardSlice = {
     boardData: [],
-    colCount: 16,
-    rowCount: 16,
-    bombsCount: 40,
+    boardSize: 10,
+    bombsCount: 10,
     isGameOver: false,
     currentEmoji: 'happy'
 };

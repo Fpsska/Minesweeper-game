@@ -10,3 +10,8 @@ export interface Irow {
     isExploded?: boolean;
     isDefused?: boolean;
 }
+
+export interface IbombPosition {
+    x: number;
+    y: number;
+}

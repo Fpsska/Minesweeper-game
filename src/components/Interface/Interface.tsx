@@ -23,8 +23,9 @@ import './interface.scss';
 // /. imports
 
 const Interface: React.FC = () => {
-    const { bombsCount, colCount, rowCount, isGameOver, currentEmoji } =
-        useAppSelector(state => state.boardSlice);
+    const { bombsCount, boardSize, isGameOver, currentEmoji } = useAppSelector(
+        state => state.boardSlice
+    );
 
     const [emojiStatuses] = useState<{ [key: string]: string }>({
         happy: defaultIcon,
@@ -43,7 +44,7 @@ const Interface: React.FC = () => {
         dispatch(switchGameOverStatus({ status: false }));
         dispatch(switchEmojiStatuses('happy'));
 
-        const newBoard = generateBoard(colCount, rowCount, bombsCount);
+        const newBoard = generateBoard(boardSize, bombsCount);
         dispatch(setBoardData(newBoard));
     };
 

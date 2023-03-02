@@ -8,8 +8,8 @@ import {
     switchEmojiStatuses
 } from '../../app/slices/boardSlice';
 
-import { generateBoard } from '../../helpers/generateBoard';
-import { convertTimerValue } from '../../helpers/convertTimerValue';
+import { generateBoard } from '../../utils/generateBoard';
+import { convertTimerValue } from '../../utils/helpers/convertTimerValue';
 
 import Timer from '../Timer/Timer';
 

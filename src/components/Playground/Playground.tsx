@@ -4,9 +4,9 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import { setBoardData } from '../../app/slices/boardSlice';
 
-import { generateBoard } from '../../helpers/generateBoard';
+import { generateBoard } from '../../utils/generateBoard';
 
-import { Irow } from '../../Types/boardTypes';
+import { Irow } from '../../types/boardTypes';
 
 import Cell from '../Cell/Cell';
 

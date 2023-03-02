@@ -14,7 +14,7 @@ import {
     openBombsMap
 } from '../../app/slices/boardSlice';
 
-import { determineColorByNumber } from '../../helpers/determineNumberColor';
+import { determineColorByNumber } from '../../utils/helpers/determineNumberColor';
 
 import './cell.scss';
 
@@ -262,6 +262,7 @@ const Cell: React.FC<propTypes> = props => {
 
     return (
         <button
+            id={String(id)}
             className={`cell ${isNumberVisible ? 'flipped' : ''} ${
                 isBombVisible ? 'bomb' : ''
             } ${isExploded ? 'exploded' : ''} ${isFlagged ? 'marked' : ''}`}

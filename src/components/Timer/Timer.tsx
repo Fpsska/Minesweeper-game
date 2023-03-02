@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { useAppSelector } from '../../app/hooks';
 
-import { convertTimerValue } from '../../helpers/convertTimerValue';
+import { convertTimerValue } from '../../utils/helpers/convertTimerValue';
 
 // /. imports
 

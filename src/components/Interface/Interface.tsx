@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import {
     setBoardData,
     switchGameOverStatus,
+    switchGameWonStatus,
     switchEmojiStatuses
 } from '../../app/slices/boardSlice';
 
@@ -23,9 +24,8 @@ import './interface.scss';
 // /. imports
 
 const Interface: React.FC = () => {
-    const { bombsCount, boardSize, isGameOver, currentEmoji } = useAppSelector(
-        state => state.boardSlice
-    );
+    const { bombsCount, boardSize, isGameOver, isGameWon, currentEmoji } =
+        useAppSelector(state => state.boardSlice);
 
     const [emojiStatuses] = useState<{ [key: string]: string }>({
         happy: defaultIcon,
@@ -34,7 +34,9 @@ const Interface: React.FC = () => {
         scared: scaredIcon
     });
 
-    const isButtonAvailable = isGameOver && currentEmoji === 'sad';
+    const isButtonAvailable =
+        (isGameOver && currentEmoji === 'sad') ||
+        (isGameWon && currentEmoji === 'cool');
 
     const dispatch = useAppDispatch();
 
@@ -42,6 +44,7 @@ const Interface: React.FC = () => {
 
     const onButtonStatusClick = (): void => {
         dispatch(switchGameOverStatus({ status: false }));
+        dispatch(switchGameWonStatus({ status: false }));
         dispatch(switchEmojiStatuses('happy'));
 
         const newBoard = generateBoard(boardSize, bombsCount);

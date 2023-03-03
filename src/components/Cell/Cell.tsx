@@ -9,6 +9,7 @@ import {
     switchDefusedStatus,
     setCurrentCellValue,
     switchGameOverStatus,
+    switchGameWonStatus,
     switchEmojiStatuses,
     calcBombsCount,
     decrementBombsCount,
@@ -51,7 +52,9 @@ const Cell: React.FC<propTypes> = props => {
         isExploded
     } = props;
 
-    const { boardData, isGameOver } = useAppSelector(state => state.boardSlice);
+    const { boardData, isGameOver, bombsCount } = useAppSelector(
+        state => state.boardSlice
+    );
     const [color, setColor] = useState<string>('');
 
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
@@ -276,6 +279,18 @@ const Cell: React.FC<propTypes> = props => {
             dispatch(calcBombsCount());
         }
     }, [isBomb, isFlagged, id]);
+
+    useEffect(() => {
+        const noBombsFields = boardData.flat(1).filter(field => !field.isBomb);
+        const isAllFieldsFlipped = noBombsFields.every(
+            field => field.isFlipped
+        );
+
+        if (isAllFieldsFlipped && !isExploded && bombsCount === 0) {
+            dispatch(switchGameWonStatus({ status: true }));
+            dispatch(switchEmojiStatuses('cool'));
+        }
+    }, [boardData, isExploded, bombsCount]);
 
     // /. effects
 

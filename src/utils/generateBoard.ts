@@ -7,9 +7,11 @@ import { compareCoordinates } from './helpers/compareCoordinates';
 
 // /. imports
 
-export function generateBoard(boardSize: number, bombs: number): Irow[][] {
+export const generateBoard = (boardSize: number, bombs: number): Irow[][] => {
     const board: Irow[][] = [];
     const bombsPositions: IbombPosition[] = getBombsPositions(boardSize, bombs);
+
+    console.log(boardSize, bombs);
 
     for (let x = 0; x < boardSize; x++) {
         const rowArray: Irow[] = [];
@@ -37,7 +39,7 @@ export function generateBoard(boardSize: number, bombs: number): Irow[][] {
     // /. generate initial fields data
 
     return board;
-}
+};
 
 function determineInitFieldValue(
     bombData: IbombPosition[],

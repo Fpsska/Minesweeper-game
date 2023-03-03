@@ -19,9 +19,13 @@ const Timer: React.FC = () => {
             setTime((prev: any) => prev + 1);
         }, 1000);
 
-        if (isGameOver || isGameWon) clearInterval(timer); // disabled inc time state
-
-        isGameOver ? setIsTimerReset(true) : setIsTimerReset(false);
+        // disabled inc time state
+        if (isGameOver || isGameWon) {
+            setIsTimerReset(false);
+            clearInterval(timer);
+        } else {
+            setIsTimerReset(true);
+        }
 
         return () => clearInterval(timer);
     }, [isGameOver, isGameWon]);
@@ -31,8 +35,7 @@ const Timer: React.FC = () => {
         if (!isGameOver && isTimerReset) {
             setTime(0);
         }
-        !isGameWon && setTime(0);
-    }, [isTimerReset, isGameOver, isGameWon]);
+    }, [isTimerReset, isGameOver]);
 
     // /. effects
 

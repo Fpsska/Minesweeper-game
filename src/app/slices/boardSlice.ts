@@ -28,6 +28,7 @@ const boardSlice = createSlice({
     reducers: {
         setBoardData(state, action: PayloadAction<Irow[][]>) {
             state.boardData = action.payload;
+            // console.log(action.payload);
         },
         switchFlippedStatus(state, action: PayloadAction<{ id: string }>) {
             const { id } = action.payload;
@@ -83,7 +84,7 @@ const boardSlice = createSlice({
             action: PayloadAction<{ id: string; value: string | number }>
         ) {
             const { id, value } = action.payload;
-            console.log(value);
+            // console.log(value);
             // /. payload
 
             const rowsData = state.boardData.flat(1);
@@ -98,12 +99,13 @@ const boardSlice = createSlice({
         ) {
             const { status } = action.payload;
             // /. payload
+            console.log('lose:', status);
             state.isGameOver = status;
         },
         switchGameWonStatus(state, action: PayloadAction<{ status: boolean }>) {
             const { status } = action.payload;
             // /. payload
-            console.log(status);
+            console.log('won:', status);
             state.isGameWon = status;
         },
         switchEmojiStatuses(state, action: PayloadAction<string>) {

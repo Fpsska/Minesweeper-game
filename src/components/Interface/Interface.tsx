@@ -27,6 +27,8 @@ const Interface: React.FC = () => {
     const { bombsCount, boardSize, isGameOver, isGameWon, currentEmoji } =
         useAppSelector(state => state.boardSlice);
 
+    const [localBombsCount] = useState<number>(bombsCount);
+
     const [emojiStatuses] = useState<{ [key: string]: string }>({
         happy: defaultIcon,
         cool: winIcon,
@@ -47,7 +49,7 @@ const Interface: React.FC = () => {
         dispatch(switchGameWonStatus({ status: false }));
         dispatch(switchEmojiStatuses('happy'));
 
-        const newBoard = generateBoard(boardSize, bombsCount);
+        const newBoard = generateBoard(boardSize, localBombsCount);
         dispatch(setBoardData(newBoard));
     };
 

@@ -2,7 +2,11 @@ import React, { useEffect, useRef } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-import { setBoardData } from '../../app/slices/boardSlice';
+import {
+    setBoardData,
+    switchGameWonStatus,
+    switchEmojiStatuses
+} from '../../app/slices/boardSlice';
 
 import { generateBoard } from '../../utils/generateBoard';
 
@@ -33,6 +37,26 @@ const Playground: React.FC = () => {
         const newBoard = generateBoard(boardSize, bombsCount);
         dispatch(setBoardData(newBoard));
     }, [boardSize]);
+
+    useEffect(() => {
+        const explodedBombs = boardData
+            .flat(1)
+            .filter(field => field.isBomb && field.isExploded);
+
+        const noBombsFields = boardData.flat(1).filter(field => !field.isBomb);
+        const isAllFieldsFlipped = noBombsFields.every(
+            field => field.isFlipped
+        );
+
+        if (
+            isAllFieldsFlipped &&
+            explodedBombs.length === 0 &&
+            bombsCount === 0
+        ) {
+            dispatch(switchGameWonStatus({ status: true }));
+            dispatch(switchEmojiStatuses('cool'));
+        }
+    }, [boardData, bombsCount]);
 
     // /. effects
 

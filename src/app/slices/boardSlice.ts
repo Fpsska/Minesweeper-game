@@ -15,8 +15,8 @@ interface IboardSlice {
 
 const initialState: IboardSlice = {
     boardData: [],
-    boardSize: 4,
-    bombsCount: 2,
+    boardSize: 2,
+    bombsCount: 1,
     isGameOver: false,
     isGameWon: false,
     currentEmoji: 'happy'

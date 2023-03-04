@@ -56,13 +56,16 @@ const Cell: React.FC<propTypes> = props => {
         setIsFirstClick
     } = props;
 
-    const { boardData, isGameOver } = useAppSelector(state => state.boardSlice);
+    const { boardData, isGameOver, isGameWon } = useAppSelector(
+        state => state.boardSlice
+    );
     const [color, setColor] = useState<string>('');
 
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
     const isBombVisible = isFlipped && isBomb;
     const isNumberVisible =
         isFlipped && !isFlagged && !isWarned && value !== 'B';
+    const isCellDisabled = isFlipped || isGameOver || isGameWon;
 
     const dispatch = useAppDispatch();
 
@@ -127,7 +130,7 @@ const Cell: React.FC<propTypes> = props => {
         e.preventDefault();
         console.log('RightClick');
 
-        if (isFlipped || isGameOver) return;
+        if (isFlipped || isGameOver || isGameWon) return;
 
         dispatch(switchFlaggedStatus({ id, status: true }));
         if (isFlagged) {
@@ -317,7 +320,7 @@ const Cell: React.FC<propTypes> = props => {
             }`}
             type="button"
             aria-label={isNumberVisible ? '' : 'open field'}
-            disabled={isFlipped || isGameOver}
+            disabled={isCellDisabled}
             style={{ color }}
             onContextMenu={e => onCellRightClick(e)}
             onMouseDown={e => onMouseDown(e)}

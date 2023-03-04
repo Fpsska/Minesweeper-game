@@ -19,7 +19,6 @@ body {
     background-color: $white-color;
     height: 100%;
     overflow: hidden;
-    position: relative;
 }
 
 #root,
@@ -29,16 +28,63 @@ body {
 
 .App {
     background-color: $green-color;
-    position: relative;
+
+    width: 100%;
+    min-height: 100vh;
+    overflow: auto;
+
+    display: flex;
+    padding: 50px;
+
+    &::-webkit-scrollbar {
+        width: 16px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: #DFDFDF;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #B8C0C1;
+        box-shadow: inset -1px -1px 0px #0A0A0A, inset 1px 1px 0px $white-color, inset -2px -2px 0px $dark-gray-color, inset 2px 2px 0px #DFDFDF;
+    }
+
+    &::-webkit-scrollbar-corner {
+        background-color: #DFDFDF;
+    }
+
+    &::-webkit-scrollbar-button:single-button {
+        height: 18px;
+        width: 16px;
+        box-shadow: inset -1px -1px 0px #0A0A0A, inset 1px 1px 0px $white-color, inset -2px -2px 0px $dark-gray-color, inset 2px 2px 0px #DFDFDF;
+        background-position: center;
+        background-size: 16px;
+        background-repeat: no-repeat;
+        background-color: #DFDFDF;
+        position: relative;
+    }
+
+    &::-webkit-scrollbar-button:single-button:vertical:decrement {
+        background-image: url('../images/scrollbar_Tarrow-icon.svg');
+    }
+
+    &::-webkit-scrollbar-button:single-button:vertical:increment {
+        background-image: url('../images/scrollbar_Barrow-icon.svg');
+    }
+
+    &::-webkit-scrollbar-button:single-button:horizontal:decrement {
+        background-image: url('../images/scrollbar_Larrow-icon.svg');
+    }
+
+    &::-webkit-scrollbar-button:single-button:horizontal:increment {
+        background-image: url('../images/scrollbar_Rarrow-icon.svg');
+    }
 }
 
 // /. general-styles
 
 .board {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: auto;
     background-color: $gray-color;
     border-top: 3px solid $gray-color;
     border-left: 3px solid $gray-color;

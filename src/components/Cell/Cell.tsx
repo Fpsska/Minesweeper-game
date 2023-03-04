@@ -59,7 +59,7 @@ const Cell: React.FC<propTypes> = props => {
     const { boardData, isGameOver, isGameWon } = useAppSelector(
         state => state.boardSlice
     );
-    const [color, setColor] = useState<string>('');
+    const [color, setColor] = useState<string>('#000');
 
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
     const isBombVisible = isFlipped && isBomb;
@@ -121,10 +121,6 @@ const Cell: React.FC<propTypes> = props => {
             dispatch(decrementBombsCount());
         }
     };
-
-    // useEffect(() => {
-    //     console.log(boardData);
-    // }, [boardData]);
 
     const onCellRightClick = (e: React.MouseEvent): void => {
         e.preventDefault();

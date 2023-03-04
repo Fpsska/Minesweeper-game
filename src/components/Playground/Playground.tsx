@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
@@ -23,6 +23,8 @@ const Playground: React.FC = () => {
         state => state.boardSlice
     );
 
+    const [isFirstClick, setIsFirstClick] = useState<boolean>(true);
+
     const dispatch = useAppDispatch();
 
     const playgroundRef = useRef<HTMLDivElement>(null!);
@@ -39,6 +41,7 @@ const Playground: React.FC = () => {
     }, [boardSize]);
 
     useEffect(() => {
+        // determine condition of won the game
         const explodedBombs = boardData
             .flat(1)
             .filter(field => field.isBomb && field.isExploded);
@@ -71,6 +74,8 @@ const Playground: React.FC = () => {
                         <Cell
                             key={field.id}
                             {...field}
+                            isFirstClick={isFirstClick}
+                            setIsFirstClick={setIsFirstClick}
                         >
                             {field.value}
                         </Cell>

@@ -9,11 +9,11 @@ import {
     switchDefusedStatus,
     setCurrentCellValue,
     switchGameOverStatus,
-    switchGameWonStatus,
     switchEmojiStatuses,
     calcBombsCount,
     decrementBombsCount,
-    openBombsMap
+    openBombsMap,
+    shuffleBoardData
 } from '../../app/slices/boardSlice';
 
 import { findAdjacentFileds } from '../../utils/findAdjacentFileds';
@@ -34,6 +34,8 @@ interface propTypes {
     isWarned: boolean;
     isBomb?: boolean;
     isExploded?: boolean;
+    isFirstClick: boolean;
+    setIsFirstClick: (arg: boolean) => void;
 }
 
 // /. interfaces
@@ -49,52 +51,77 @@ const Cell: React.FC<propTypes> = props => {
         isFlagged,
         isWarned,
         isBomb,
-        isExploded
+        isExploded,
+        isFirstClick,
+        setIsFirstClick
     } = props;
 
-    const { boardData, isGameOver, bombsCount } = useAppSelector(
-        state => state.boardSlice
-    );
+    const { boardData, isGameOver } = useAppSelector(state => state.boardSlice);
     const [color, setColor] = useState<string>('');
 
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
-    const isBombVisible = isFlipped && isBomb; //  && typeof value === 'string'
+    const isBombVisible = isFlipped && isBomb;
     const isNumberVisible =
-        isFlipped && !isFlagged && !isWarned && !isBombVisible;
+        isFlipped && !isFlagged && !isWarned && value !== 'B';
 
     const dispatch = useAppDispatch();
 
     // /. hooks
 
+    const onCellFirstClick = (): void => {
+        if (!isFirstClick) return;
+        if (!isBomb) {
+            console.log('1st NO BOMB');
+            onCellLeftClick();
+
+            setIsFirstClick(false);
+        }
+        if (isBomb) {
+            console.log('1st BOMB');
+            dispatch(shuffleBoardData({ bombID: id }));
+            calcCellValue();
+            dispatch(switchFlippedStatus({ id }));
+
+            setIsFirstClick(false);
+        }
+    };
+
+    const calcCellValue = (): void => {
+        const neighboredFields = findAdjacentFileds(boardData, x, y);
+        const neighboredBombs = neighboredFields.filter(field => field.isBomb);
+        if (neighboredBombs.length !== 0) {
+            dispatch(
+                setCurrentCellValue({
+                    id,
+                    value: neighboredBombs.length
+                })
+            );
+        }
+    };
+
     const onCellLeftClick = (): void => {
-        console.log('LeftClick');
+        // console.log('LeftClick');
         // console.log(boardData);
+
         if (isFlagged || isWarned) return;
 
         if (!isFlagged && !isWarned && !isBomb) {
+            console.log('flip');
+            calcCellValue();
             dispatch(switchFlippedStatus({ id }));
-
-            const neighboredFields = findAdjacentFileds(boardData, x, y);
-            const neighboredBombs = neighboredFields.filter(
-                field => field.isBomb
-            );
-            if (neighboredBombs.length !== 0) {
-                dispatch(
-                    setCurrentCellValue({
-                        id,
-                        value: neighboredBombs.length
-                    })
-                );
-            }
         }
         if (isBomb) {
+            console.log('lose');
             dispatch(switchGameOverStatus({ status: true }));
             dispatch(openBombsMap({ id }));
             dispatch(switchEmojiStatuses('sad'));
             dispatch(decrementBombsCount());
-            console.log('bomb');
         }
     };
+
+    // useEffect(() => {
+    //     console.log(boardData);
+    // }, [boardData]);
 
     const onCellRightClick = (e: React.MouseEvent): void => {
         e.preventDefault();
@@ -280,14 +307,14 @@ const Cell: React.FC<propTypes> = props => {
         }
     }, [isBomb, isFlagged, id]);
 
-    // /. effects
-
     return (
         <button
             id={String(id)}
-            className={`cell ${isNumberVisible ? 'flipped' : ''} ${
-                isBombVisible ? 'bomb' : ''
-            } ${isExploded ? 'exploded' : ''} ${isFlagged ? 'marked' : ''}`}
+            className={`cell ${
+                isNumberVisible || isBombVisible ? 'flipped' : ''
+            } ${isBombVisible ? 'bomb' : ''} ${isExploded ? 'exploded' : ''} ${
+                isFlagged ? 'marked' : ''
+            }`}
             type="button"
             aria-label={isNumberVisible ? '' : 'open field'}
             disabled={isFlipped || isGameOver}
@@ -295,7 +322,7 @@ const Cell: React.FC<propTypes> = props => {
             onContextMenu={e => onCellRightClick(e)}
             onMouseDown={e => onMouseDown(e)}
             onMouseUp={onMouseUp}
-            onClick={onCellLeftClick}
+            onClick={isFirstClick ? onCellFirstClick : onCellLeftClick}
         >
             {isNumberVisible
                 ? children

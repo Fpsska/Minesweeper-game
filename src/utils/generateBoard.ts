@@ -11,7 +11,7 @@ export const generateBoard = (boardSize: number, bombs: number): Irow[][] => {
     const board: Irow[][] = [];
     const bombsPositions: IbombPosition[] = getBombsPositions(boardSize, bombs);
 
-    console.log(boardSize, bombs);
+    // console.log(boardSize, bombs);
 
     for (let x = 0; x < boardSize; x++) {
         const rowArray: Irow[] = [];

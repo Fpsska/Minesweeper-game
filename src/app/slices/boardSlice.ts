@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 
 import { Irow } from '../../types/boardTypes';
 
@@ -15,8 +15,8 @@ interface IboardSlice {
 
 const initialState: IboardSlice = {
     boardData: [],
-    boardSize: 2,
-    bombsCount: 1,
+    boardSize: 4,
+    bombsCount: 2,
     isGameOver: false,
     isGameWon: false,
     currentEmoji: 'happy'
@@ -29,6 +29,26 @@ const boardSlice = createSlice({
         setBoardData(state, action: PayloadAction<Irow[][]>) {
             state.boardData = action.payload;
             // console.log(action.payload);
+        },
+        shuffleBoardData(state, action: PayloadAction<{ bombID: string }>) {
+            const { bombID } = action.payload;
+            // /. payload;
+
+            const rowsData = state.boardData.flat(1);
+            rowsData.map(item => console.log(current(item)));
+            console.log('-------------');
+
+            const targetBomb = rowsData.find(field => field.id === bombID);
+            const neighboredField = rowsData.find(field => !field.isBomb);
+
+            if (targetBomb && neighboredField) {
+                targetBomb.value = '';
+                targetBomb.isBomb = false;
+                neighboredField.value = 'B';
+                neighboredField.isBomb = true;
+
+                rowsData.map(item => console.log(current(item)));
+            }
         },
         switchFlippedStatus(state, action: PayloadAction<{ id: string }>) {
             const { id } = action.payload;
@@ -84,7 +104,8 @@ const boardSlice = createSlice({
             action: PayloadAction<{ id: string; value: string | number }>
         ) {
             const { id, value } = action.payload;
-            // console.log(value);
+            console.log(value);
+
             // /. payload
 
             const rowsData = state.boardData.flat(1);
@@ -143,6 +164,7 @@ const boardSlice = createSlice({
 
 export const {
     setBoardData,
+    shuffleBoardData,
     switchFlippedStatus,
     switchFlaggedStatus,
     switchWarnedStatus,

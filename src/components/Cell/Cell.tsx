@@ -59,10 +59,10 @@ const Cell: React.FC<propTypes> = props => {
     const { boardData, isGameOver, isGameWon } = useAppSelector(
         state => state.boardSlice
     );
-    const [color, setColor] = useState<string>('#000');
+    const [color, setColor] = useState<string>('#878787');
 
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
-    const isBombVisible = isFlipped && isBomb;
+    const isBombVisible = isFlipped && isBomb && value === 'B';
     const isNumberVisible =
         isFlipped && !isFlagged && !isWarned && value !== 'B';
     const isCellDisabled = isFlipped || isGameOver || isGameWon;
@@ -74,13 +74,11 @@ const Cell: React.FC<propTypes> = props => {
     const onCellFirstClick = (): void => {
         if (!isFirstClick) return;
         if (!isBomb) {
-            console.log('1st NO BOMB');
             onCellLeftClick();
 
             setIsFirstClick(false);
         }
         if (isBomb) {
-            console.log('1st BOMB');
             dispatch(shuffleBoardData({ bombID: id }));
             calcCellValue();
             dispatch(switchFlippedStatus({ id }));
@@ -92,7 +90,13 @@ const Cell: React.FC<propTypes> = props => {
     const calcCellValue = (): void => {
         const neighboredFields = findAdjacentFileds(boardData, x, y);
         const neighboredBombs = neighboredFields.filter(field => field.isBomb);
-        if (neighboredBombs.length !== 0) {
+        if (neighboredBombs.length === 0) {
+            // reveal all neighbored empty, safe fields
+            neighboredFields.forEach(({ id }) => {
+                dispatch(switchFlippedStatus({ id }));
+            });
+        } else {
+            // reveal current (one) field if bombs are nearby
             dispatch(
                 setCurrentCellValue({
                     id,
@@ -103,18 +107,13 @@ const Cell: React.FC<propTypes> = props => {
     };
 
     const onCellLeftClick = (): void => {
-        // console.log('LeftClick');
-        // console.log(boardData);
-
         if (isFlagged || isWarned) return;
 
         if (!isFlagged && !isWarned && !isBomb) {
-            console.log('flip');
             calcCellValue();
             dispatch(switchFlippedStatus({ id }));
         }
         if (isBomb) {
-            console.log('lose');
             dispatch(switchGameOverStatus({ status: true }));
             dispatch(openBombsMap({ id }));
             dispatch(switchEmojiStatuses('sad'));
@@ -124,7 +123,6 @@ const Cell: React.FC<propTypes> = props => {
 
     const onCellRightClick = (e: React.MouseEvent): void => {
         e.preventDefault();
-        console.log('RightClick');
 
         if (isFlipped || isGameOver || isGameWon) return;
 

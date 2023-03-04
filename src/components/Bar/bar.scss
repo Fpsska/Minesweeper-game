@@ -1,0 +1,69 @@
+@import '../../assets/styles/vars';
+
+// /. imports
+
+.controls {
+    display: flex;
+    align-items: center;
+
+    &__button {
+        width: 24px;
+        height: 24px;
+        background-color: #DFDFDF;
+        border-top: 2px solid $white-color;
+        border-left: 2px solid $white-color;
+        border-bottom: 2px solid $dark-color;
+        border-radius: 2px solid $dark-color;
+        padding: 0;
+        cursor: pointer;
+
+        span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border-top: 2px solid $gray-color;
+            border-left: 2px solid $gray-color;
+            border-bottom: 2px solid $dark-gray-color;
+            border-right: 2px solid $dark-gray-color;
+        }
+
+        svg {
+            width: 100%;
+            height: 60%;
+            transition: all .25s linear;
+            fill: $dark-color;
+        }
+
+    }
+
+    &__button_collapsed {
+
+        &:hover svg {
+            fill: $dark-gray-color;
+        }
+
+        span {
+            align-items: flex-end;
+        }
+
+        svg {
+            width: 55%;
+        }
+    }
+
+    &__button_uncollapsed {
+        &:hover svg {
+            fill: #9E9E9E;
+        }
+    }
+
+    &__button_closed {
+        margin-left: 5px;
+
+        &:hover svg {
+            fill: $red-color
+        }
+    }
+}

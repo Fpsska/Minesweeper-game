@@ -98,11 +98,17 @@ body {
         padding: 1px;
     }
 
-    &__header {
+    &__bar {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
         padding: 4px 5px;
+    }
+
+    &__logo {
+        display: flex;
+        align-items: center;
     }
 
     &__image {

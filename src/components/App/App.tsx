@@ -1,9 +1,8 @@
 import React from 'react';
 
+import Bar from '../Bar/Bar';
 import Playground from '../Playground/Playground';
 import Interface from '../Interface/Interface';
-
-import gameIcon from '../../assets/images/game-icon.svg';
 
 import '../../assets/styles/style.scss';
 import './app.css';
@@ -16,16 +15,7 @@ const App: React.FC = () => {
             <div className="board">
                 <div className="board__wrapper">
                     <section className="board__header">
-                        <a
-                            className="board__image"
-                            href="#"
-                        >
-                            <img
-                                src={gameIcon}
-                                alt="game-icon"
-                            />
-                        </a>
-                        <h1 className="board__name">Minesweeper</h1>
+                        <Bar />
                     </section>
                     <section className="board__body">
                         <Interface />

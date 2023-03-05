@@ -18,6 +18,7 @@ import {
 
 import { findAdjacentFileds } from '../../utils/findAdjacentFileds';
 import { determineColorByNumber } from '../../utils/helpers/determineNumberColor';
+import { generateClassNames } from '../../utils/helpers/generateClassNames';
 
 import SvgTemplate from '../SvgTemplate/SvgTemplate';
 
@@ -73,11 +74,16 @@ const Cell: React.FC<propTypes> = props => {
         isFlipped && !isFlagged && !isWarned && value !== 'B';
     const isCellDisabled = isFlipped || isGameOver || isGameWon;
 
-    const dispatch = useAppDispatch();
+    const cellClassNames = [
+        isNumberVisible || isBombVisible ? 'flipped' : '',
+        isBombVisible ? 'bomb' : '',
+        isExploded ? 'exploded' : '',
+        isDefused ? 'defused' : '',
+        isFlagged ? 'marked' : '',
+        isWarned ? 'warned' : ''
+    ];
 
-    useEffect(() => {
-        console.log(isDefusebBombVisible);
-    }, [isDefusebBombVisible]);
+    const dispatch = useAppDispatch();
 
     // /. hooks
 
@@ -183,12 +189,7 @@ const Cell: React.FC<propTypes> = props => {
     return (
         <button
             id={String(id)}
-            className={`cell ${
-                isNumberVisible || isBombVisible ? 'flipped' : ''
-            } ${isBombVisible ? 'bomb' : ''} ${isExploded ? 'exploded' : ''} ${
-                isDefused ? 'defused' : ''
-            } ${isFlagged ? 'marked' : ''} ${isWarned ? 'warned' : ''} `}
-            type="button"
+            className={`cell ${generateClassNames(...cellClassNames)}`}
             aria-label={isNumberVisible ? '' : 'open field'}
             disabled={isCellDisabled}
             style={{ color }}

@@ -19,6 +19,8 @@ import {
 import { findAdjacentFileds } from '../../utils/findAdjacentFileds';
 import { determineColorByNumber } from '../../utils/helpers/determineNumberColor';
 
+import SvgTemplate from '../SvgTemplate/SvgTemplate';
+
 import './cell.scss';
 
 // /. imports
@@ -34,6 +36,7 @@ interface propTypes {
     isWarned: boolean;
     isBomb?: boolean;
     isExploded?: boolean;
+    isDefused?: boolean;
     isFirstClick: boolean;
     setIsFirstClick: (arg: boolean) => void;
 }
@@ -52,6 +55,7 @@ const Cell: React.FC<propTypes> = props => {
         isWarned,
         isBomb,
         isExploded,
+        isDefused,
         isFirstClick,
         setIsFirstClick
     } = props;
@@ -63,11 +67,17 @@ const Cell: React.FC<propTypes> = props => {
 
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
     const isBombVisible = isFlipped && isBomb && value === 'B';
+    const isDefusebBombVisible =
+        isFlipped && isBomb && value === 'B' && isDefused && isFlagged;
     const isNumberVisible =
         isFlipped && !isFlagged && !isWarned && value !== 'B';
     const isCellDisabled = isFlipped || isGameOver || isGameWon;
 
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        console.log(isDefusebBombVisible);
+    }, [isDefusebBombVisible]);
 
     // /. hooks
 
@@ -147,140 +157,6 @@ const Cell: React.FC<propTypes> = props => {
         dispatch(switchEmojiStatuses('happy'));
     };
 
-    const flagIcon = (
-        <svg
-            className="flag-icon"
-            width="8"
-            height="10"
-            viewBox="0 0 8 10"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <rect
-                x="3.66257"
-                width="0.915642"
-                height="8.6986"
-                fill="black"
-            />
-            <rect
-                y="7.32514"
-                width="7.32514"
-                height="1.83128"
-                fill="#010000"
-            />
-            <rect
-                x="1.83129"
-                y="6.4095"
-                width="3.66257"
-                height="0.915642"
-                fill="#010000"
-            />
-            <rect
-                x="2.7469"
-                width="1.83128"
-                height="4.57821"
-                fill="#FC0D1B"
-            />
-            <rect
-                x="0.915609"
-                y="0.915642"
-                width="1.83128"
-                height="2.74693"
-                fill="#FC0D1B"
-            />
-            <rect
-                y="1.83128"
-                width="0.915642"
-                height="0.915642"
-                fill="#FC0D1B"
-            />
-        </svg>
-    );
-
-    const bombIcon = (
-        <svg
-            className="bomb-icon"
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <rect
-                x="7.8938"
-                y="3"
-                width="0.815642"
-                height="10.6034"
-                fill="black"
-            />
-            <rect
-                x="13.6033"
-                y="7.8938"
-                width="0.815642"
-                height="10.6034"
-                transform="rotate(90 13.6033 7.8938)"
-                fill="black"
-            />
-            <rect
-                x="6.26245"
-                y="4.63135"
-                width="4.07821"
-                height="7.34078"
-                fill="black"
-            />
-            <rect
-                x="11.9722"
-                y="6.26245"
-                width="4.07821"
-                height="7.34078"
-                transform="rotate(90 11.9722 6.26245)"
-                fill="black"
-            />
-            <rect
-                x="5.44702"
-                y="5.44702"
-                width="5.7095"
-                height="5.7095"
-                fill="black"
-            />
-            <rect
-                x="11.1565"
-                y="4.63135"
-                width="0.815642"
-                height="0.815642"
-                fill="black"
-            />
-            <rect
-                x="11.1565"
-                y="11.1565"
-                width="0.815642"
-                height="0.815642"
-                fill="black"
-            />
-            <rect
-                x="4.63135"
-                y="4.63135"
-                width="0.815642"
-                height="0.815642"
-                fill="black"
-            />
-            <rect
-                x="4.63135"
-                y="11.1565"
-                width="0.815642"
-                height="0.815642"
-                fill="black"
-            />
-            <rect
-                x="6.26245"
-                y="6.26245"
-                width="1.63128"
-                height="1.63128"
-                fill="white"
-            />
-        </svg>
-    );
-
     // /. functions
 
     useEffect(() => {
@@ -310,8 +186,8 @@ const Cell: React.FC<propTypes> = props => {
             className={`cell ${
                 isNumberVisible || isBombVisible ? 'flipped' : ''
             } ${isBombVisible ? 'bomb' : ''} ${isExploded ? 'exploded' : ''} ${
-                isFlagged ? 'marked' : ''
-            }`}
+                isDefused ? 'defused' : ''
+            } ${isFlagged ? 'marked' : ''} ${isWarned ? 'warned' : ''} `}
             type="button"
             aria-label={isNumberVisible ? '' : 'open field'}
             disabled={isCellDisabled}
@@ -321,15 +197,19 @@ const Cell: React.FC<propTypes> = props => {
             onMouseUp={onMouseUp}
             onClick={isFirstClick ? onCellFirstClick : onCellLeftClick}
         >
-            {isNumberVisible
-                ? children
-                : isFlagVisible
-                ? flagIcon
-                : isWarned
-                ? '?'
-                : isBombVisible
-                ? bombIcon
-                : ''}
+            {isNumberVisible ? (
+                children
+            ) : isFlagVisible ? (
+                <SvgTemplate name="flag" />
+            ) : isWarned ? (
+                <SvgTemplate name="warned" />
+            ) : isDefusebBombVisible ? (
+                <SvgTemplate name="bomb-defused" />
+            ) : isBombVisible ? (
+                <SvgTemplate name="bomb" />
+            ) : (
+                ''
+            )}
         </button>
     );
 };

@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ###### _designed by [Gustavo Luz](https://dribbble.com/guztaluz)_
 
-### `Watch demo` _[vk-minesweeper](https://fpsska.github.io/vk-minesweeper/)_
+### `Watch demo` _[vk-minesweeper-task](https://Fpsska.github.io/vk-minesweeper-task)_
 
 ## Available Scripts
 

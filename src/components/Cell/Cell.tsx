@@ -107,9 +107,10 @@ const Cell: React.FC<propTypes> = props => {
         const neighboredFields = findAdjacentFileds(boardData, x, y);
         const neighboredBombs = neighboredFields.filter(field => field.isBomb);
         if (neighboredBombs.length === 0) {
-            // reveal all neighbored empty, safe fields
-            neighboredFields.forEach(({ id }) => {
-                dispatch(switchFlippedStatus({ id }));
+            // reveal all neighbored empty, safe fields (not flagged)
+            neighboredFields.forEach(field => {
+                !field.isFlagged &&
+                    dispatch(switchFlippedStatus({ id: field.id }));
             });
         } else {
             // reveal current (one) field if bombs are nearby

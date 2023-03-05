@@ -1,4 +1,4 @@
-import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Irow } from '../../types/boardTypes';
 
@@ -28,16 +28,12 @@ const boardSlice = createSlice({
     reducers: {
         setBoardData(state, action: PayloadAction<Irow[][]>) {
             state.boardData = action.payload;
-            // console.log(action.payload);
         },
         shuffleBoardData(state, action: PayloadAction<{ bombID: string }>) {
             const { bombID } = action.payload;
-            // /. payload;
+            // /. payload
 
             const rowsData = state.boardData.flat(1);
-            rowsData.map(item => console.log(current(item)));
-            console.log('-------------');
-
             const targetBomb = rowsData.find(field => field.id === bombID);
             const neighboredField = rowsData.find(field => !field.isBomb);
 
@@ -46,8 +42,6 @@ const boardSlice = createSlice({
                 targetBomb.isBomb = false;
                 neighboredField.value = 'B';
                 neighboredField.isBomb = true;
-
-                rowsData.map(item => console.log(current(item)));
             }
         },
         switchFlippedStatus(state, action: PayloadAction<{ id: string }>) {
@@ -104,8 +98,6 @@ const boardSlice = createSlice({
             action: PayloadAction<{ id: string; value: string | number }>
         ) {
             const { id, value } = action.payload;
-            console.log(value);
-
             // /. payload
 
             const rowsData = state.boardData.flat(1);
@@ -120,13 +112,13 @@ const boardSlice = createSlice({
         ) {
             const { status } = action.payload;
             // /. payload
-            console.log('lose:', status);
+
             state.isGameOver = status;
         },
         switchGameWonStatus(state, action: PayloadAction<{ status: boolean }>) {
             const { status } = action.payload;
             // /. payload
-            console.log('won:', status);
+
             state.isGameWon = status;
         },
         switchEmojiStatuses(state, action: PayloadAction<string>) {
@@ -154,6 +146,7 @@ const boardSlice = createSlice({
                 .flat(1)
                 .filter(field => field.isBomb);
             const activeBombs = bombsData.filter(field => !field.isDefused);
+
             state.bombsCount = activeBombs.length;
         },
         decrementBombsCount(state) {

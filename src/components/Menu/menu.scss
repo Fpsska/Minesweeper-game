@@ -1,0 +1,32 @@
+@import '../../assets/styles/vars';
+
+// /. imports
+
+.menu {
+    display: flex;
+    align-items: center;
+
+    &__option {
+
+        &:hover a {
+            color: $dark-gray-color;
+        }
+
+        &:not(:last-child) {
+            margin-right: 30px;
+        }
+
+        a {
+            display: inline-block;
+            transition: all .1s linear;
+
+            font-size: 18px;
+            font-weight: 100;
+            color: $dark-color;
+
+            &::first-letter {
+                border-bottom: 1px solid $dark-color;
+            }
+        }
+    }
+}

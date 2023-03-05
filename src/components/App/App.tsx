@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Bar from '../Bar/Bar';
+import Menu from '../Menu/Menu';
 import Playground from '../Playground/Playground';
 import Interface from '../Interface/Interface';
 
@@ -16,6 +17,9 @@ const App: React.FC = () => {
                 <div className="board__wrapper">
                     <section className="board__header">
                         <Bar />
+                    </section>
+                    <section className="board__menu">
+                        <Menu />
                     </section>
                     <section className="board__body">
                         <Interface />

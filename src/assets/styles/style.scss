@@ -34,7 +34,7 @@ body {
     overflow: auto;
 
     display: flex;
-    padding: 50px;
+    padding: 20px;
 
     &::-webkit-scrollbar {
         width: 14px;
@@ -106,6 +106,10 @@ body {
         padding: 4px 5px;
     }
 
+    &__menu {
+        padding: 18px 15px;
+    }
+
     &__logo {
         display: flex;
         align-items: center;
@@ -113,8 +117,8 @@ body {
 
     &__image {
         display: flex;
-        flex: 0 0 16px;
-        height: 16px;
+        flex: 0 0 20px;
+        height: 20px;
         overflow: hidden;
         margin-right: 5px;
     }

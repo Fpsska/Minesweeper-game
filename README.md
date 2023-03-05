@@ -6,6 +6,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### `Watch demo` _[vk-minesweeper-task](https://Fpsska.github.io/vk-minesweeper-task)_
 
+Guideline for launch:
+1. open GIT console on desktop or any directory of your PC, use `git clone https://github.com/Fpsska/vk-minesweeper-task.git`
+2. open cloned project directory with any code editor
+3. use `npm install` in terminal console of code editor for download all dependencies
+4. use `npm start` allias in terminal console of code editor for run application
+
 ## Available Scripts
 
 In the project directory, you can run:

@@ -19,9 +19,8 @@ import './playground.scss';
 // /. imports
 
 const Playground: React.FC = () => {
-    const { boardSize, bombsCount, boardData } = useAppSelector(
-        state => state.boardSlice
-    );
+    const { boardSize, bombsCount, boardData, isGameOver, isGameWon } =
+        useAppSelector(state => state.boardSlice);
 
     const [isFirstClick, setIsFirstClick] = useState<boolean>(true);
 
@@ -60,6 +59,13 @@ const Playground: React.FC = () => {
             dispatch(switchEmojiStatuses('cool'));
         }
     }, [boardData, bombsCount]);
+
+    useEffect(() => {
+        // fixing a receiving bomb at 1st opening move when restart the game
+        if (isGameOver || isGameWon) {
+            setIsFirstClick(true);
+        }
+    }, [isGameOver, isGameWon]);
 
     // /. effects
 

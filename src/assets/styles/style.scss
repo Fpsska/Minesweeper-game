@@ -66,19 +66,19 @@ body {
     }
 
     &::-webkit-scrollbar-button:single-button:vertical:decrement {
-        background-image: url('../images/scrollbar_Tarrow-icon.svg');
+        background-image: url('../icons/scrollbar_Tarrow-icon.svg');
     }
 
     &::-webkit-scrollbar-button:single-button:vertical:increment {
-        background-image: url('../images/scrollbar_Barrow-icon.svg');
+        background-image: url('../icons/scrollbar_Barrow-icon.svg');
     }
 
     &::-webkit-scrollbar-button:single-button:horizontal:decrement {
-        background-image: url('../images/scrollbar_Larrow-icon.svg');
+        background-image: url('../icons/scrollbar_Larrow-icon.svg');
     }
 
     &::-webkit-scrollbar-button:single-button:horizontal:increment {
-        background-image: url('../images/scrollbar_Rarrow-icon.svg');
+        background-image: url('../icons/scrollbar_Rarrow-icon.svg');
     }
 }
 

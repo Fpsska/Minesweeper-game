@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
@@ -14,10 +14,10 @@ import { convertTimerValue } from '../../utils/helpers/convertTimerValue';
 
 import Timer from '../Timer/Timer';
 
-import defaultIcon from '../../assets/images/default_emoji-icon.svg';
-import scaredIcon from '../../assets/images/scared_emoji-icon.svg';
-import loseIcon from '../../assets/images/lose_emoji-icon.svg';
-import winIcon from '../../assets/images/win_emoji-icon.svg';
+import defaultIcon from '../../assets/icons/default_emoji-icon.svg';
+import scaredIcon from '../../assets/icons/scared_emoji-icon.svg';
+import loseIcon from '../../assets/icons/lose_emoji-icon.svg';
+import winIcon from '../../assets/icons/win_emoji-icon.svg';
 
 import './interface.scss';
 

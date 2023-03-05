@@ -1,9 +1,9 @@
 {
-  "name": "vk-minesweeper",
+  "name": "vk-minesweeper-task",
   "version": "0.1.0",
   "private": true,
   "author": "Fpsska",
-  "homepage": "https://Fpsska.github.io/vk-minesweeper",
+  "homepage": "https://Fpsska.github.io/vk-minesweeper-task",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.3",
     "@testing-library/jest-dom": "^5.16.5",

@@ -36,9 +36,17 @@ const Interface: React.FC = () => {
         scared: scaredIcon
     });
 
+    const [textMessages] = useState<{ [key: string]: string }>({
+        happy: 'Good luck!',
+        cool: 'You won!',
+        sad: 'You lose :('
+    });
+
     const isButtonAvailable =
         (isGameOver && currentEmoji === 'sad') ||
         (isGameWon && currentEmoji === 'cool');
+
+    const isGameFinished = isGameOver || isGameWon;
 
     const dispatch = useAppDispatch();
 
@@ -60,7 +68,14 @@ const Interface: React.FC = () => {
             <div className="information__bombs-count">
                 <span>{convertTimerValue(bombsCount)}</span>
             </div>
-            <div className="information__status">
+            <div
+                className={
+                    isGameFinished
+                        ? 'information__status finished'
+                        : 'information__status'
+                }
+                title={textMessages[currentEmoji]}
+            >
                 <button
                     type="button"
                     aria-label="restart game"

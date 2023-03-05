@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": "Fpsska",
+  "homepage": "https://Fpsska.github.io/vk-minesweeper",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.3",
     "@testing-library/jest-dom": "^5.16.5",
@@ -50,6 +51,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "gh-pages": "^5.0.0",
     "prettier": "^2.8.4",
     "sass": "^1.58.3"
   }

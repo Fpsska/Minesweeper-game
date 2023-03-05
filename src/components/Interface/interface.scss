@@ -66,4 +66,12 @@
             height: 100%;
         }
     }
+
+    &__status.finished {
+        border: transparent;
+
+        button {
+            border: transparent;
+        }
+    }
 }

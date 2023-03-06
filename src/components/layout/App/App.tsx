@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Bar from '../Bar/Bar';
-import Menu from '../Menu/Menu';
-import Playground from '../Playground/Playground';
-import Interface from '../Interface/Interface';
+import Bar from 'components/ui/Bar/Bar';
+import Menu from 'components/ui/Menu/Menu';
+import Playground from 'components/ui/Playground/Playground';
+import Interface from 'components/ui/Interface/Interface';
 
-import '../../assets/styles/style.scss';
+import 'assets/styles/style.scss';
 import './app.css';
 
 // /. imports

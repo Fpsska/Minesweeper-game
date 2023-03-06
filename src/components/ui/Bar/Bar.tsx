@@ -1,6 +1,6 @@
 import React from 'react';
 
-import gameIcon from '../../assets/icons/game-icon.svg';
+import gameIcon from 'assets/icons/game-icon.svg';
 
 import './bar.scss';
 

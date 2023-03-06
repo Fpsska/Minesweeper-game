@@ -1,4 +1,4 @@
-import { Irow, IbombPosition } from '../types/boardTypes';
+import { Irow, IbombPosition } from 'types/boardTypes';
 
 import { getBombsPositions } from './getBombsPositions';
 

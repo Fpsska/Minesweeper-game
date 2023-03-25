@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import Cell from '../Cell/Cell';
-
 import { useAppSelector, useAppDispatch } from 'app/hooks';
 
 import {
@@ -13,6 +11,8 @@ import {
 import { generateBoard } from 'utils/generateBoard';
 
 import { Irow } from 'types/boardTypes';
+
+import Cell from '../../ui/Cell/Cell';
 
 import './playground.scss';
 

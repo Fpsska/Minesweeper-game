@@ -2,7 +2,7 @@ import React from 'react';
 
 import Bar from 'components/ui/Bar/Bar';
 import Menu from 'components/ui/Menu/Menu';
-import Playground from 'components/ui/Playground/Playground';
+import Playground from 'components/layout/Playground/Playground';
 import Interface from 'components/ui/Interface/Interface';
 
 import 'assets/styles/style.scss';

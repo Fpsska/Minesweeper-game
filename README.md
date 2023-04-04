@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ###### _designed by [Gustavo Luz](https://dribbble.com/guztaluz)_
 
-### `Watch demo` _[minesweeper-game](https://Fpsska.github.io/minesweeper-game)_
+### `Watch demo` _[Minesweeper-game](https://Fpsska.github.io/Minesweeper-game)_
 
 Guideline for launch:
 1. open GIT console on desktop or any directory of your PC, use `git clone https://github.com/Fpsska/vk-minesweeper-task.git`

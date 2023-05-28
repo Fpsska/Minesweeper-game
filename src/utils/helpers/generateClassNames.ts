@@ -1,3 +1,3 @@
-export function generateClassNames(...args: any[]): string {
-    return args.filter(Boolean).join(' ');
+export function generateClassNames(...args: string[]): string {
+    return args.filter(Boolean).join('');
 }

@@ -1,27 +1,23 @@
+# syntax=docker/dockerfile:1
 
-
+### BUILDING STAGE ###
 # Use a NodeJs image for building (lightweight version)
-FROM node:21-alpine
-
+FROM node:21.7.3-alpine AS build-stage
 # Set the working directory inside the container
 WORKDIR /app
-
 # Copy package.json & package-lock.json
 COPY package*.json .
-
 # Install project dependencies
-RUN npm ci || npm install
-
+RUN npm ci
 # Copy the rest of the app source code into the container
 COPY . .
-
 # Build the app (outputs to /app/build)
 RUN npm run build
 
-# Expose the port app runs on
-EXPOSE 3000
-
-# Define the command to run app
-CMD sh -c 'ENTRYPOINT=$(find build/static/js -name "main.*.js" | head -n 1); \
-    [ -z "$ENTRYPOINT" ] && echo "Error: entry js-file not found!" && exit 1; \
-    node "$ENTRYPOINT"'
+### SERVING STAGE ###
+# Use a Nginx image for serving (lightweight version)
+FROM nginx:1.29.0-alpine AS serve-stage
+# Copy build artifacts from prev build stage
+COPY --from=build-stage /app/build /usr/share/nginx/html
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf

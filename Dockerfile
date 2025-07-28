@@ -17,7 +17,7 @@ RUN npm run build
 ### SERVING STAGE ###
 # Use a Nginx image for serving (lightweight version)
 FROM nginx:1.29.0-alpine AS serve-stage
-# Copy build artifacts from prev build stage
+# Set up static nginx files from app build
 COPY --from=build-stage /app/build /usr/share/nginx/html
-# Copy custom nginx config
+# Set up custom nginx default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf

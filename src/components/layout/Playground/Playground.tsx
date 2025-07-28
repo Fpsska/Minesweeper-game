@@ -38,7 +38,7 @@ const Playground: React.FC = () => {
     useEffect(() => {
         const newBoard = generateBoard(boardSize, bombsCount);
         dispatch(setBoardData(newBoard));
-    }, [boardSize]);
+    }, [boardSize]); // TODO
 
     useEffect(() => {
         // determine condition of won the game

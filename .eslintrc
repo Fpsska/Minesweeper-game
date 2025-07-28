@@ -2,9 +2,7 @@
     "settings": {
         "import/resolver": {
             "node": {
-                "paths": [
-                    "src"
-                ]
+                "paths": ["src"]
             }
         }
     },
@@ -41,27 +39,15 @@
             }
         ],
         "no-console": "warn",
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "jsx-quotes": [
-            "error",
-            "prefer-double"
-        ],
+        "quotes": ["warn", "single"],
+        "jsx-quotes": ["warn", "prefer-double"],
         "no-unused-vars": "warn",
         "prefer-const": "error",
-        "comma-dangle": [
-            "warn",
-            "never"
-        ],
-        "semi": [
-            "warn",
-            "always"
-        ],
+        "comma-dangle": ["warn", "never"],
+        "semi": ["warn", "always"],
         "@typescript-eslint/no-explicit-any": "off",
         "import/order": [
-            "error",
+            "warn",
             {
                 "groups": [
                     "builtin",

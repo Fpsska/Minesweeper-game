@@ -26,6 +26,7 @@ const Playground: React.FC = () => {
 
     const dispatch = useAppDispatch();
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const playgroundRef = useRef<HTMLDivElement>(null!);
 
     // /. hooks
@@ -58,6 +59,7 @@ const Playground: React.FC = () => {
             dispatch(switchGameWonStatus({ status: true }));
             dispatch(switchEmojiStatuses('cool'));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [boardData, bombsCount]);
 
     useEffect(() => {

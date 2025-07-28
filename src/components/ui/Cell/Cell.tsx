@@ -185,6 +185,7 @@ const Cell: React.FC<propTypes> = props => {
             dispatch(switchDefusedStatus({ id, status: false }));
             dispatch(calcBombsCount());
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isBomb, isFlagged, id]);
 
     return (

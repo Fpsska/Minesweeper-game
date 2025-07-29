@@ -38,6 +38,7 @@ const Playground: React.FC = () => {
     useEffect(() => {
         const newBoard = generateBoard(boardSize, bombsCount);
         dispatch(setBoardData(newBoard));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [boardSize]); // TODO
 
     useEffect(() => {

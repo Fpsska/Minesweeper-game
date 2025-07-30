@@ -6,9 +6,9 @@ FROM node:21.7.3-alpine AS build-stage
 # Set the working directory inside the container
 WORKDIR /app
 # Copy package.json & package-lock.json
-COPY package*.json .
-# Install project dependencies
-RUN npm ci
+COPY package*.json ./
+# Install project dependencies (exclude devDependencies)
+RUN npm ci || npm install --omit=dev
 # Copy the rest of the app source code into the container
 COPY . .
 # Build the app (outputs to /app/build)

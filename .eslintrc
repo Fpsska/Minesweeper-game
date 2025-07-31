@@ -1,4 +1,5 @@
 {
+    "ignorePatterns": ["build/", "node_modules/"],
     "settings": {
         "import/resolver": {
             "node": {

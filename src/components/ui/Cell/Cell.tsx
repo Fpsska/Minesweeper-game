@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { type ReactNode, useState, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch } from 'app/hooks';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 import {
     switchFlippedStatus,
@@ -14,11 +14,11 @@ import {
     decrementBombsCount,
     openBombsMap,
     shuffleBoardData
-} from 'app/slices/boardSlice';
+} from '../../../app/slices/boardSlice';
 
-import { findAdjacentFileds } from 'utils/findAdjacentFileds';
-import { determineColorByNumber } from 'utils/helpers/determineNumberColor';
-import { generateClassNames } from 'utils/helpers/generateClassNames';
+import { findAdjacentFileds } from '../../../utils/findAdjacentFileds';
+import { determineColorByNumber } from '../../../utils/helpers/determineNumberColor';
+import { generateClassNames } from '../../../utils/helpers/generateClassNames';
 
 import SvgTemplate from '../SvgTemplate/SvgTemplate';
 
@@ -27,7 +27,7 @@ import './cell.scss';
 // /. imports
 
 interface propTypes {
-    children: JSX.Element;
+    children: ReactNode;
     id: string;
     value: string | number;
     x: number;

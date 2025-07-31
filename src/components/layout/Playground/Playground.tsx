@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch } from 'app/hooks';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 import {
     setBoardData,
     switchGameWonStatus,
     switchEmojiStatuses
-} from 'app/slices/boardSlice';
+} from '../../../app/slices/boardSlice';
 
-import { generateBoard } from 'utils/generateBoard';
+import { generateBoard } from '../../../utils/generateBoard';
 
-import { Irow } from 'types/boardTypes';
+import { Irow } from '../../../types/boardTypes';
 
 import Cell from '../../ui/Cell/Cell';
 

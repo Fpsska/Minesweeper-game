@@ -1,4 +1,4 @@
-@import 'assets/styles/vars';
+@import '../../../assets/styles/vars';
 
 // /. imports
 
@@ -14,7 +14,6 @@
 
     &__bombs-count,
     &__timer {
-
         background-color: $dark-color;
         border-top: 1px solid $dark-color;
         border-left: 1px solid $dark-color;
@@ -51,12 +50,14 @@
         }
 
         &::-webkit-scrollbar-track {
-            background-color: #DFDFDF;
+            background-color: #dfdfdf;
         }
 
         &::-webkit-scrollbar-thumb {
-            background-color: #B8C0C1;
-            box-shadow: inset -1px -1px 0px #0A0A0A, inset 1px 1px 0px $white-color, inset -2px -2px 0px $dark-gray-color, inset 2px 2px 0px #DFDFDF;
+            background-color: #b8c0c1;
+            box-shadow: inset -1px -1px 0px #0a0a0a,
+                inset 1px 1px 0px $white-color,
+                inset -2px -2px 0px $dark-gray-color, inset 2px 2px 0px #dfdfdf;
         }
     }
 

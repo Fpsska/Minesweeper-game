@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { Irow } from 'types/boardTypes';
+import type { Irow } from '../../types/boardTypes';
 
 // /. imports
 

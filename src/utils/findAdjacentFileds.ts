@@ -1,4 +1,4 @@
-import { Irow } from 'types/boardTypes';
+import type { Irow } from '../types/boardTypes';
 
 // /. imports
 

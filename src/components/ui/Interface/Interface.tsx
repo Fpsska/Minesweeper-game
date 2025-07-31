@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 
-import { useAppSelector, useAppDispatch } from 'app/hooks';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 import {
     setBoardData,
     switchGameOverStatus,
     switchGameWonStatus,
     switchEmojiStatuses
-} from 'app/slices/boardSlice';
+} from '../../../app/slices/boardSlice';
 
-import { generateBoard } from 'utils/generateBoard';
-import { convertTimerValue } from 'utils/helpers/convertTimerValue';
+import { generateBoard } from '../../../utils/generateBoard';
+import { convertTimerValue } from '../../../utils/helpers/convertTimerValue';
 
-import defaultIcon from 'assets/icons/default_emoji-icon.svg';
-import scaredIcon from 'assets/icons/scared_emoji-icon.svg';
-import loseIcon from 'assets/icons/lose_emoji-icon.svg';
-import winIcon from 'assets/icons/win_emoji-icon.svg';
+import defaultIcon from '../../../assets/icons/default_emoji-icon.svg';
+import scaredIcon from '../../../assets/icons/scared_emoji-icon.svg';
+import loseIcon from '../../../assets/icons/lose_emoji-icon.svg';
+import winIcon from '../../../assets/icons/win_emoji-icon.svg';
 
 import Timer from '../Timer/Timer';
 

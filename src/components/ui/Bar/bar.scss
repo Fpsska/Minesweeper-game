@@ -1,4 +1,4 @@
-@import 'assets/styles/vars';
+@import '../../../assets/styles/vars';
 
 // /. imports
 
@@ -9,7 +9,7 @@
     &__button {
         width: 24px;
         height: 24px;
-        background-color: #DFDFDF;
+        background-color: #dfdfdf;
         border-top: 2px solid $white-color;
         border-left: 2px solid $white-color;
         border-bottom: 2px solid $dark-color;
@@ -32,14 +32,12 @@
         svg {
             width: 100%;
             height: 60%;
-            transition: all .25s linear;
+            transition: all 0.25s linear;
             fill: $dark-color;
         }
-
     }
 
     &__button_collapsed {
-
         &:hover svg {
             fill: $dark-gray-color;
         }
@@ -55,7 +53,7 @@
 
     &__button_uncollapsed {
         &:hover svg {
-            fill: #9E9E9E;
+            fill: #9e9e9e;
         }
     }
 
@@ -63,7 +61,7 @@
         margin-left: 5px;
 
         &:hover svg {
-            fill: $red-color
+            fill: $red-color;
         }
     }
 }

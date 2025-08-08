@@ -1,20 +1,19 @@
 import { resolve } from 'path';
 
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, type UserConfig } from 'vite';
 import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import reactPlugin from '@vitejs/plugin-react';
 
 // /. imports
 
-const getPlugins = mode => {
+const getPlugins = (mode: UserConfig['mode']): UserConfig['plugins'] => {
     const isProd = mode === 'production';
 
-    const plugins = [reactPlugin()];
+    const plugins: UserConfig['plugins'] = [reactPlugin()];
 
     if (isProd) {
         plugins.push(
             ViteMinifyPlugin({
-                exclude: /node_modules/,
                 minifyCSS: true,
                 minifyJS: true,
                 collapseWhitespace: true,
@@ -28,7 +27,7 @@ const getPlugins = mode => {
     return plugins;
 };
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode }): UserConfig => {
     return {
         server: {
             port: 3000,
@@ -57,14 +56,10 @@ export default defineConfig(({ mode }) => {
                             return 'assets/fonts/[name]-[hash][extname]';
                         }
 
-                        // return 'assets/[name]-[hash][extname]';
-                        return `assets/[name][extname]`;
+                        return 'assets/[name]-[hash][extname]';
                     }
                 }
             }
-        },
-        preview: {
-            outDir: 'build'
         },
         plugins: getPlugins(mode)
     };

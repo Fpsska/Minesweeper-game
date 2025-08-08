@@ -1,7 +1,9 @@
 name: Deploy app on github.io
 on:
     push:
-        branches: ['gh-pages']
+        tags:
+            - 'rc-[0-9]+.[0-9]+.[0-9]+' # rc-25.1.0
+        branches: ['main']
 
     # Allows you to run this workflow manually from the Actions tab
     workflow_dispatch:
@@ -26,20 +28,7 @@ jobs:
         steps:
             - name: Echo a greeting message
               run: echo "Hello from custom deploy action👋"
-    lint:
-        strategy:
-            matrix:
-                os: [ubuntu-latest, windows-latest]
-        runs-on: ${{ matrix.os }}
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-            - name: Install dependencies
-              run: npm ci
-            - name: Lint code
-              run: npm run lint
     deploy:
-        needs: [lint]
         strategy:
             matrix:
                 version: [18, 20]
@@ -57,7 +46,9 @@ jobs:
                   node-version: ${{ matrix.version }}
                   cache: 'npm'
             - name: Install dependencies
-              run: npm ci
+              run: npm ci || npm install --omit=dev
+            - name: Lint code
+              run: npm run lint
             - name: Build
               run: npm run build
             - name: Setup Pages

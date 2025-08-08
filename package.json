@@ -14,7 +14,6 @@
     "scripts": {
         "start": "vite --mode development",
         "build": "vite build --mode production",
-        "deploy": "npm run build && git subtree push --prefix build origin gh-pages",
         "lint": "eslint -c .eslintrc --ext .ts,.tsx .",
         "lint:fix": "npm run lint -- --fix",
         "prettier": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",

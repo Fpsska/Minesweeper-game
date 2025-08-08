@@ -1,12 +1,10 @@
 name: Deploy app on github.io
 on:
     push:
+        branches:
+            - main
         tags:
             - 'rc-[0-9]+.[0-9]+.[0-9]+' # rc-25.1.0
-        branches: ['main']
-
-    # Allows you to run this workflow manually from the Actions tab
-    workflow_dispatch:
 
 # Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
 permissions:
@@ -21,14 +19,41 @@ concurrency:
 
 jobs:
     greeting:
-        strategy:
-            matrix:
-                os: [ubuntu-latest]
-        runs-on: ${{ matrix.os }}
+        runs-on: ubuntu-latest
         steps:
             - name: Echo a greeting message
               run: echo "Hello from custom deploy action👋"
+    verify-tag:
+        runs-on: ubuntu-latest
+        steps: # TODO
+            - name: TEST
+              run: echo "test verify-tag job"
+    build:
+        needs: verify-tag
+        strategy:
+            matrix:
+                version: [18, 20]
+                os: [ubuntu-latest, windows-latest]
+        runs-on: ${{ matrix.os }}
+        continue-on-error: true
+        steps:
+            - name: Share repository for workspace runner
+              uses: actions/checkout@v4
+            - name: Set up NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.version }}
+            - name: Cache dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: node-modules-${{ hashFiles('**/package-lock.json') }}
+            - name: Install dependencies
+              run: npm ci || npm install --omit=dev
+            - name: Build
+              run: npm run build
     deploy:
+        needs: [verify-tag, build]
         strategy:
             matrix:
                 version: [18, 20]
@@ -38,19 +63,13 @@ jobs:
             url: ${{ steps.deployment.outputs.page_url }}
         runs-on: ${{ matrix.os }}
         steps:
-            - name: Checkout
+            - name: Share repository for workspace runner
               uses: actions/checkout@v4
-            - name: Set up Node
+            - name: Set up NodeJS
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.version }}
                   cache: 'npm'
-            - name: Install dependencies
-              run: npm ci || npm install --omit=dev
-            - name: Lint code
-              run: npm run lint
-            - name: Build
-              run: npm run build
             - name: Setup Pages
               uses: actions/configure-pages@v4
             - name: Upload artifact

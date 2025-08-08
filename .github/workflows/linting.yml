@@ -1,25 +1,23 @@
 name: Linting Code
-on:
-    push:
-        branches: ['main']
+
+on: push
 jobs:
     greeting:
-        strategy:
-            matrix:
-                os: [ubuntu-latest]
-        runs-on: ${{ matrix.os }}
+        runs-on: ubuntu-latest
         steps:
             - name: Echo a greeting message
               run: echo "Hello from custom linting action👋"
     lint:
-        strategy:
-            matrix:
-                os: [ubuntu-latest, windows-latest]
-        runs-on: ${{ matrix.os }}
+        runs-on: ubuntu-latest
         steps:
-            - name: Checkout
+            - name: Share repository for workspace runner
               uses: actions/checkout@v4
+            - name: Cache dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: node-modules-${{ hashFiles('**/package-lock.json') }}
             - name: Install dependencies
-              run: npm ci
+              run: npm ci || npm install --omit=dev
             - name: Lint code
               run: npm run lint

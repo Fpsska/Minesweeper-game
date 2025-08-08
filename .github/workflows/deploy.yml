@@ -2,7 +2,7 @@ name: Deploy app on github.io
 on:
     push:
         branches:
-            - main
+            - release
         tags:
             - 'rc-[0-9]+.[0-9]+.[0-9]+' # rc-25.1.0
 
@@ -52,6 +52,11 @@ jobs:
               run: npm ci || npm install --omit=dev
             - name: Build
               run: npm run build
+            - name: Upload Artifact
+              uses: actions/upload-artifact@v3
+              with:
+                  path: build
+                  name: static-files
     deploy:
         needs: [verify-tag, build]
         strategy:
@@ -82,3 +87,7 @@ jobs:
               uses: actions/deploy-pages@v4
               with:
                   artifact_name: artifact-${{ matrix.os }}-${{ matrix.version }}
+            - name: Get artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: static-files

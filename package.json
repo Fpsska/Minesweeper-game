@@ -1,53 +1,55 @@
 {
-    "name": "minesweeper-game",
-    "version": "0.1.0",
-    "private": true,
-    "author": "Fpsska",
-    "type": "module",
-    "dependencies": {
-        "@reduxjs/toolkit": "^2.8.2",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "react-redux": "^9.2.0",
-        "typescript": "^5.8.3"
-    },
-    "scripts": {
-        "start": "vite --mode development",
-        "build": "vite build --mode development",
-        "build:prod": "vite build --mode production",
-        "deploy": "npm run build && git subtree push --prefix build origin gh-pages",
-        "lint": "eslint -c .eslintrc --ext .ts,.tsx .",
-        "lint:fix": "npm run lint -- --fix",
-        "prettier": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
-        "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "devDependencies": {
-        "@types/node": "^24.1.0",
-        "@types/react": "^19.1.9",
-        "@types/react-dom": "^19.1.7",
-        "@typescript-eslint/eslint-plugin": "^5.53.0",
-        "@typescript-eslint/parser": "^5.53.0",
-        "@vitejs/plugin-react": "^4.7.0",
-        "eslint-config-prettier": "^8.6.0",
-        "eslint-plugin-import": "^2.32.0",
-        "eslint-plugin-prettier": "^4.2.1",
-        "eslint-plugin-react": "^7.32.2",
-        "eslint-plugin-react-hooks": "^4.6.0",
-        "prettier": "^2.8.4",
-        "sass": "^1.89.2",
-        "vite": "^7.0.6",
-        "vite-plugin-minify": "^2.1.0"
-    }
+  "name": "minesweeper-game",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Fpsska",
+  "type": "module",
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.2.0",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "start": "vite --mode development",
+    "build": "vite build --mode development",
+    "build:prod": "vite build --mode production",
+    "deploy": "npm run build && git subtree push --prefix build origin gh-pages",
+    "lint": "eslint -c .eslintrc --ext .ts,.tsx .",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
+    "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "prepare": "husky"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^9.1.7",
+    "prettier": "^2.8.4",
+    "sass": "^1.89.2",
+    "vite": "^7.0.6",
+    "vite-plugin-minify": "^2.1.0"
+  }
 }

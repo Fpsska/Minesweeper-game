@@ -53,7 +53,7 @@ jobs:
             - name: Build
               run: npm run build
             - name: Upload Artifact
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   path: build
                   name: static-files

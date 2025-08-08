@@ -22,8 +22,6 @@ const getPlugins = (mode: UserConfig['mode']): UserConfig['plugins'] => {
         );
     }
 
-    // TODO: +plugin for copy static from public folder
-
     return plugins;
 };
 

@@ -43,7 +43,7 @@ export default defineConfig(({ mode }): UserConfig => {
                     chunkFileNames: 'assets/scripts/chunks/[name]-[hash].js',
                     assetFileNames: ({ names }) => {
                         const fileName = names[0];
-                        console.log(fileName);
+
                         if (/\.css$/.test(fileName)) {
                             return 'assets/css/[name]-[hash][extname]';
                         }

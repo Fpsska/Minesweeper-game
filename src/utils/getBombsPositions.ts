@@ -1,7 +1,7 @@
-import type { IbombPosition } from '../types/boardTypes';
-
 import { getRandomNum } from './helpers/getRandomNum';
 import { compareCoordinates } from './helpers/compareCoordinates';
+
+import type { IbombPosition } from '../types/boardTypes';
 
 // /. imports
 

@@ -1,9 +1,9 @@
-import type { Irow, IbombPosition } from '../types/boardTypes';
-
 import { getBombsPositions } from './getBombsPositions';
 
 import { generateUniqueID } from './helpers/generateUniqueID';
 import { compareCoordinates } from './helpers/compareCoordinates';
+
+import type { Irow, IbombPosition } from '../types/boardTypes';
 
 // /. imports
 

@@ -27,6 +27,7 @@ const getPlugins = (mode: UserConfig['mode']): UserConfig['plugins'] => {
 
 export default defineConfig(({ mode }): UserConfig => {
     return {
+        base: 'Minesweeper-game',
         server: {
             port: 3000,
             open: true

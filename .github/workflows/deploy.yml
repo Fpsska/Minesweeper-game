@@ -32,7 +32,7 @@ jobs:
         needs: verify-tag
         strategy:
             matrix:
-                version: [18, 20]
+                version: [20, 21]
                 os: [ubuntu-latest, windows-latest]
         runs-on: ${{ matrix.os }}
         continue-on-error: true
@@ -61,33 +61,27 @@ jobs:
         needs: [verify-tag, build]
         strategy:
             matrix:
-                version: [18, 20]
-                os: [ubuntu-latest, windows-latest]
+                version: [20]
+                os: [ubuntu-latest]
+        runs-on: ${{ matrix.os }}
         environment:
             name: github-pages
             url: ${{ steps.deployment.outputs.page_url }}
-        runs-on: ${{ matrix.os }}
         steps:
-            - name: Share repository for workspace runner
-              uses: actions/checkout@v4
-            - name: Set up NodeJS
-              uses: actions/setup-node@v4
+            - name: Download artifacts
+              uses: actions/download-artifact@v4
               with:
-                  node-version: ${{ matrix.version }}
-                  cache: 'npm'
+                  path: build
+                  name: app-build-${{ matrix.os }}-${{ matrix.version }}
+            - name: Test downloaded artifacts
+              run: ls -R build
             - name: Setup Pages
               uses: actions/configure-pages@v4
-            - name: Upload artifact
+            - name: Upload pages artifacts
               uses: actions/upload-pages-artifact@v3
               with:
-                  name: artifact-${{ matrix.os }}-${{ matrix.version }}
-                  path: './build'
+                  path: 'build'
+                  name: app-build-${{ matrix.os }}-${{ matrix.version }}
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v4
-              with:
-                  artifact_name: artifact-${{ matrix.os }}-${{ matrix.version }}
-            - name: Get artifacts
-              uses: actions/download-artifact@v4
-              with:
-                  name: app-build-${{ matrix.os }}-${{ matrix.version }}

@@ -56,14 +56,10 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   path: build
-                  name: app-build-${{ matrix.os }}-${{ matrix.version }}
+                  name: app-build-${{ matrix.os }}-node-${{ matrix.version }}
     deploy:
         needs: [verify-tag, build]
-        strategy:
-            matrix:
-                version: [20]
-                os: [ubuntu-latest]
-        runs-on: ${{ matrix.os }}
+        runs-on: ubuntu-latest
         environment:
             name: github-pages
             url: ${{ steps.deployment.outputs.page_url }}
@@ -72,7 +68,7 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                   path: build
-                  name: app-build-${{ matrix.os }}-${{ matrix.version }}
+                  name: app-build-ubuntu-latest-node-20
             - name: Test downloaded artifacts
               run: ls -R build
             - name: Setup Pages
@@ -81,7 +77,6 @@ jobs:
               uses: actions/upload-pages-artifact@v3
               with:
                   path: 'build'
-                  name: app-build-${{ matrix.os }}-${{ matrix.version }}
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v4

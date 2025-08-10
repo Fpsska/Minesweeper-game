@@ -12,7 +12,7 @@ RUN npm ci || npm install --omit=dev
 # Copy the rest of the app source code into the container
 COPY . .
 # Build the app (outputs to /app/build)
-RUN npm run build
+RUN npm run build:docker
 
 ### SERVING STAGE ###
 # Use a Nginx image for serving (lightweight version)

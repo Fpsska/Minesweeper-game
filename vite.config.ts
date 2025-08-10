@@ -6,12 +6,14 @@ import reactPlugin from '@vitejs/plugin-react';
 
 // /. imports
 
-const getPlugins = (mode: UserConfig['mode']): UserConfig['plugins'] => {
-    const isProd = mode === 'production';
+const getPlugins = (
+    mode: UserConfig['mode'] = 'development'
+): UserConfig['plugins'] => {
+    const isMinifyMode = ['production', 'docker'].includes(mode);
 
     const plugins: UserConfig['plugins'] = [reactPlugin()];
 
-    if (isProd) {
+    if (isMinifyMode) {
         plugins.push(
             ViteMinifyPlugin({
                 minifyCSS: true,
@@ -26,8 +28,10 @@ const getPlugins = (mode: UserConfig['mode']): UserConfig['plugins'] => {
 };
 
 export default defineConfig(({ mode }): UserConfig => {
+    const isDockerMode = mode === 'docker';
+
     return {
-        base: 'Minesweeper-game',
+        base: !isDockerMode ? 'Minesweeper-game' : undefined,
         server: {
             port: 3000,
             open: true

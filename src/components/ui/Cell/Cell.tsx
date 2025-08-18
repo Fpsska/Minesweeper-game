@@ -1,4 +1,4 @@
-import React, { type ReactNode, useState, useEffect } from 'react';
+import React, { type ReactNode } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
@@ -6,18 +6,15 @@ import {
     switchFlippedStatus,
     switchFlaggedStatus,
     switchWarnedStatus,
-    switchDefusedStatus,
     setCurrentCellValue,
-    switchGameOverStatus,
-    switchEmojiStatuses,
-    calcBombsCount,
-    decrementBombsCount,
+    switchEmojiStatus,
     openBombsMap,
-    shuffleBoardData
+    shuffleBoardData,
+    switchGameStatus,
+    switchFirstMoveStatus
 } from '../../../app/slices/boardSlice';
 
 import { findAdjacentFileds } from '../../../utils/findAdjacentFileds';
-import { determineColorByNumber } from '../../../utils/helpers/determineNumberColor';
 import { generateClassNames } from '../../../utils/helpers/generateClassNames';
 
 import SvgTemplate from '../SvgTemplate/SvgTemplate';
@@ -30,6 +27,7 @@ interface propTypes {
     children: ReactNode;
     id: string;
     value: string | number;
+    color?: string;
     x: number;
     y: number;
     isFlipped: boolean;
@@ -38,8 +36,6 @@ interface propTypes {
     isBomb?: boolean;
     isExploded?: boolean;
     isDefused?: boolean;
-    isFirstClick: boolean;
-    setIsFirstClick: (arg: boolean) => void;
 }
 
 // /. interfaces
@@ -49,6 +45,7 @@ const Cell: React.FC<propTypes> = props => {
         children,
         id,
         value,
+        color,
         x,
         y,
         isFlipped,
@@ -56,15 +53,14 @@ const Cell: React.FC<propTypes> = props => {
         isWarned,
         isBomb,
         isExploded,
-        isDefused,
-        isFirstClick,
-        setIsFirstClick
+        isDefused
     } = props;
 
-    const { boardData, isGameOver, isGameWon } = useAppSelector(
+    const { boardData, gameStatus, isFirstMove } = useAppSelector(
         state => state.boardSlice
     );
-    const [color, setColor] = useState<string>('#878787');
+
+    const isGameFinished = ['win', 'lose'].includes(gameStatus);
 
     const isFlagVisible = !isFlipped && isFlagged && !isWarned;
     const isBombVisible = isFlipped && isBomb && value === 'B';
@@ -72,7 +68,7 @@ const Cell: React.FC<propTypes> = props => {
         isFlipped && isBomb && value === 'B' && isDefused && isFlagged;
     const isNumberVisible =
         isFlipped && !isFlagged && !isWarned && value !== 'B';
-    const isCellDisabled = isFlipped || isGameOver || isGameWon;
+    const isCellDisabled = isGameFinished || isFlipped;
 
     const cellClassNames = [
         isNumberVisible || isBombVisible ? 'flipped' : '',
@@ -87,68 +83,70 @@ const Cell: React.FC<propTypes> = props => {
 
     // /. hooks
 
-    const onCellFirstClick = (): void => {
-        if (!isFirstClick) return;
-        if (!isBomb) {
-            onCellLeftClick();
-
-            setIsFirstClick(false);
-        }
-        if (isBomb) {
-            dispatch(shuffleBoardData({ bombID: id }));
-            calcCellValue();
-            dispatch(switchFlippedStatus({ id }));
-
-            setIsFirstClick(false);
-        }
-    };
-
     const calcCellValue = (): void => {
         const neighboredFields = findAdjacentFileds(boardData, x, y);
         const neighboredBombs = neighboredFields.filter(field => field.isBomb);
+
         if (neighboredBombs.length === 0) {
             // reveal all neighbored empty, safe fields (not flagged)
-            neighboredFields.forEach(field => {
-                !field.isFlagged &&
+            return neighboredFields.forEach(field => {
+                if (!field.isFlagged) {
                     dispatch(switchFlippedStatus({ id: field.id }));
+                }
             });
-        } else {
-            // reveal current (one) field if bombs are nearby
-            dispatch(
-                setCurrentCellValue({
-                    id,
-                    value: neighboredBombs.length
-                })
-            );
         }
+
+        // reveal current (one) field if bombs are nearby
+        dispatch(
+            setCurrentCellValue({
+                id,
+                value: neighboredBombs.length
+            })
+        );
     };
 
     const onCellLeftClick = (): void => {
-        if (isFlagged || isWarned) return;
+        if (isFirstMove) {
+            if (isFlagged || isWarned) return;
+            dispatch(switchGameStatus({ status: 'in-game' }));
 
-        if (!isFlagged && !isWarned && !isBomb) {
+            if (isBomb) {
+                // console.log('FIRST + BOMB');
+                dispatch(shuffleBoardData({ bombID: id }));
+            }
+
             calcCellValue();
             dispatch(switchFlippedStatus({ id }));
-        }
-        if (isBomb) {
-            dispatch(switchGameOverStatus({ status: true }));
-            dispatch(openBombsMap({ id }));
-            dispatch(switchEmojiStatuses('sad'));
-            dispatch(decrementBombsCount());
+            dispatch(switchFirstMoveStatus({ status: false }));
+        } else {
+            if (isFlagged || isWarned) return;
+
+            if (isBomb) {
+                // console.log('SECOND + BOMB');
+                dispatch(switchFlippedStatus({ id }));
+                dispatch(openBombsMap({ id }));
+                dispatch(switchGameStatus({ status: 'lose' }));
+                dispatch(switchEmojiStatus({ emoji: 'sad' }));
+                return;
+            }
+
+            calcCellValue();
+            dispatch(switchFlippedStatus({ id }));
         }
     };
 
     const onCellRightClick = (e: React.MouseEvent): void => {
         e.preventDefault();
-
-        if (isFlipped || isGameOver || isGameWon) return;
+        if (isFlipped || isGameFinished) return;
 
         dispatch(switchFlaggedStatus({ id, status: true }));
+
         if (isFlagged) {
             dispatch(switchFlaggedStatus({ id, status: false }));
             dispatch(switchWarnedStatus({ id, status: true }));
         }
-        if (!isFlagged && isWarned) {
+
+        if (isWarned) {
             dispatch(switchFlaggedStatus({ id, status: false }));
             dispatch(switchWarnedStatus({ id, status: false }));
         }
@@ -156,41 +154,19 @@ const Cell: React.FC<propTypes> = props => {
 
     const onMouseDown = (e: React.MouseEvent): void => {
         if (e.button === 2 || isFlagged || isWarned) return;
-        dispatch(switchEmojiStatuses('scared'));
+        dispatch(switchEmojiStatus({ emoji: 'scared' }));
     };
 
     const onMouseUp = (e: React.MouseEvent): void => {
         if (e.button === 2 || isFlagged || isWarned) return;
-        dispatch(switchEmojiStatuses('happy'));
+        dispatch(switchEmojiStatus({ emoji: 'happy' }));
     };
 
     // /. functions
 
-    useEffect(() => {
-        // set color for current cell element
-        const isColorAllowed = typeof value === 'number' && isNumberVisible;
-
-        if (isColorAllowed) {
-            setColor(determineColorByNumber(value));
-        }
-    }, [value, isNumberVisible]);
-
-    useEffect(() => {
-        // recalc bombCounter when user is flagging/unflagging a bomb
-        if (isFlagged && isBomb) {
-            dispatch(switchDefusedStatus({ id, status: true }));
-            dispatch(calcBombsCount());
-        }
-        if (!isFlagged && isBomb) {
-            dispatch(switchDefusedStatus({ id, status: false }));
-            dispatch(calcBombsCount());
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isBomb, isFlagged, id]);
-
     return (
         <button
-            id={String(id)}
+            id={id}
             className={`cell ${generateClassNames(...cellClassNames)}`}
             aria-label={isNumberVisible ? '' : 'open field'}
             disabled={isCellDisabled}
@@ -198,8 +174,9 @@ const Cell: React.FC<propTypes> = props => {
             onContextMenu={e => onCellRightClick(e)}
             onMouseDown={e => onMouseDown(e)}
             onMouseUp={onMouseUp}
-            onClick={isFirstClick ? onCellFirstClick : onCellLeftClick}
+            onClick={onCellLeftClick}
         >
+            {/* // TODO */}
             {isNumberVisible ? (
                 children
             ) : isFlagVisible ? (

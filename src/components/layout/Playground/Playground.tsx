@@ -1,11 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {
+    // useState,
+    useRef,
+    useEffect,
+    useLayoutEffect
+} from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 import {
     setBoardData,
-    switchGameWonStatus,
-    switchEmojiStatuses
+    switchGameStatus,
+    switchEmojiStatus
 } from '../../../app/slices/boardSlice';
 
 import { generateBoard } from '../../../utils/generateBoard';
@@ -19,56 +24,44 @@ import './playground.scss';
 // /. imports
 
 const Playground: React.FC = () => {
-    const { boardSize, bombsCount, boardData, isGameOver, isGameWon } =
-        useAppSelector(state => state.boardSlice);
-
-    const [isFirstClick, setIsFirstClick] = useState<boolean>(true);
+    const { boardSize, bombsCount, boardData, gameStatus } = useAppSelector(
+        state => state.boardSlice
+    );
 
     const dispatch = useAppDispatch();
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const playgroundRef = useRef<HTMLDivElement>(null!);
+    const playgroundRef = useRef<HTMLDivElement | null>(null);
+    // const isFirstClick = useRef<boolean>(true);
 
     // /. hooks
 
-    useEffect(() => {
-        playgroundRef.current.style.setProperty('--size', String(boardSize));
-    }, [boardSize]);
+    useLayoutEffect(() => {
+        playgroundRef.current?.style.setProperty('--size', String(boardSize));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
+        // Initialize board data
         const newBoard = generateBoard(boardSize, bombsCount);
         dispatch(setBoardData(newBoard));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [boardSize]); // TODO
+    }, []);
 
     useEffect(() => {
-        // determine condition of won the game
-        const explodedBombs = boardData
+        // Handle for game over (win)
+        if (gameStatus !== 'in-game') return;
+
+        const cellsToValidate = boardData
             .flat(1)
-            .filter(field => field.isBomb && field.isExploded);
+            .filter(cell => !cell.isFlipped && !cell.isFlagged);
+        const isAllCellsFlipped = cellsToValidate.every(cell => cell.isFlipped);
 
-        const noBombsFields = boardData.flat(1).filter(field => !field.isBomb);
-        const isAllFieldsFlipped = noBombsFields.every(
-            field => field.isFlipped
-        );
-
-        if (
-            isAllFieldsFlipped &&
-            explodedBombs.length === 0 &&
-            bombsCount === 0
-        ) {
-            dispatch(switchGameWonStatus({ status: true }));
-            dispatch(switchEmojiStatuses('cool'));
+        if (isAllCellsFlipped) {
+            dispatch(switchGameStatus({ status: 'win' }));
+            dispatch(switchEmojiStatus({ emoji: 'cool' }));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [boardData, bombsCount]);
-
-    useEffect(() => {
-        // fixing a receiving bomb at 1st opening move when restart the game
-        if (isGameOver || isGameWon) {
-            setIsFirstClick(true);
-        }
-    }, [isGameOver, isGameWon]);
+    }, [boardData, gameStatus]);
 
     // /. effects
 
@@ -78,15 +71,13 @@ const Playground: React.FC = () => {
             ref={playgroundRef}
         >
             {boardData.map(row => {
-                return row.map((field: Irow) => {
+                return row.map((cell: Irow) => {
                     return (
                         <Cell
-                            key={field.id}
-                            {...field}
-                            isFirstClick={isFirstClick}
-                            setIsFirstClick={setIsFirstClick}
+                            key={cell.id}
+                            {...cell}
                         >
-                            {field.value}
+                            {cell.value}
                         </Cell>
                     );
                 });

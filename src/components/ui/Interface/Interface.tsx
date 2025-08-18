@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 import {
+    type Emoji,
     setBoardData,
-    switchGameOverStatus,
-    switchGameWonStatus,
-    switchEmojiStatuses
+    switchGameStatus,
+    switchEmojiStatus,
+    switchFirstMoveStatus
 } from '../../../app/slices/boardSlice';
 
 import { generateBoard } from '../../../utils/generateBoard';
 import { convertTimerValue } from '../../../utils/helpers/convertTimerValue';
 
-import defaultIcon from '../../../assets/icons/default_emoji-icon.svg';
+import happyIcon from '../../../assets/icons/default_emoji-icon.svg';
 import scaredIcon from '../../../assets/icons/scared_emoji-icon.svg';
 import loseIcon from '../../../assets/icons/lose_emoji-icon.svg';
 import winIcon from '../../../assets/icons/win_emoji-icon.svg';
@@ -23,41 +24,36 @@ import './interface.scss';
 
 // /. imports
 
+const statusesToMessage: Partial<Record<Emoji, string>> = {
+    happy: 'Good luck!',
+    cool: 'You won!',
+    sad: 'You lose :('
+};
+
+const emojiToIcon: Partial<Record<Emoji, string>> = {
+    happy: happyIcon,
+    cool: winIcon,
+    sad: loseIcon,
+    scared: scaredIcon
+};
+
 const Interface: React.FC = () => {
-    const { bombsCount, boardSize, isGameOver, isGameWon, currentEmoji } =
-        useAppSelector(state => state.boardSlice);
+    const { bombsCount, boardSize, gameStatus, currentEmoji } = useAppSelector(
+        state => state.boardSlice
+    );
 
-    const [localBombsCount] = useState<number>(bombsCount);
-
-    const [emojiStatuses] = useState<{ [key: string]: string }>({
-        happy: defaultIcon,
-        cool: winIcon,
-        sad: loseIcon,
-        scared: scaredIcon
-    });
-
-    const [textMessages] = useState<{ [key: string]: string }>({
-        happy: 'Good luck!',
-        cool: 'You won!',
-        sad: 'You lose :('
-    });
-
-    const isButtonAvailable =
-        (isGameOver && currentEmoji === 'sad') ||
-        (isGameWon && currentEmoji === 'cool');
-
-    const isGameFinished = isGameOver || isGameWon;
+    const isGameFinished = ['win', 'lose'].includes(gameStatus);
 
     const dispatch = useAppDispatch();
 
     // /. hooks
 
     const onButtonStatusClick = (): void => {
-        dispatch(switchGameOverStatus({ status: false }));
-        dispatch(switchGameWonStatus({ status: false }));
-        dispatch(switchEmojiStatuses('happy'));
+        dispatch(switchGameStatus({ status: 'initial' }));
+        dispatch(switchEmojiStatus({ emoji: 'happy' }));
+        dispatch(switchFirstMoveStatus({ status: true }));
 
-        const newBoard = generateBoard(boardSize, localBombsCount);
+        const newBoard = generateBoard(boardSize, bombsCount);
         dispatch(setBoardData(newBoard));
     };
 
@@ -74,17 +70,15 @@ const Interface: React.FC = () => {
                         ? 'information__status finished'
                         : 'information__status'
                 }
-                title={textMessages[currentEmoji]}
+                title={statusesToMessage[currentEmoji]}
             >
                 <button
                     type="button"
                     aria-label="restart game"
                     style={{
-                        backgroundImage: `url("${
-                            emojiStatuses[currentEmoji] || defaultIcon
-                        }")`
+                        backgroundImage: `url("${emojiToIcon[currentEmoji]}")`
                     }}
-                    onClick={() => isButtonAvailable && onButtonStatusClick()}
+                    onClick={() => isGameFinished && onButtonStatusClick()}
                 ></button>
             </div>
             <div className="information__timer">

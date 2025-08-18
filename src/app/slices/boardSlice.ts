@@ -1,25 +1,29 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
+import { determineColorByNumber } from '../../utils/helpers/determineNumberColor';
+
 import type { Irow } from '../../types/boardTypes';
 
 // /. imports
 
+export type GameStatus = 'initial' | 'in-game' | 'win' | 'lose';
+export type Emoji = 'happy' | 'cool' | 'sad' | 'scared';
 interface IboardSlice {
     boardData: Irow[][];
     boardSize: number;
     bombsCount: number;
-    isGameOver: boolean;
-    isGameWon: boolean;
-    currentEmoji: string;
+    gameStatus: GameStatus;
+    currentEmoji: Emoji;
+    isFirstMove: boolean;
 }
 
 const initialState: IboardSlice = {
     boardData: [],
-    boardSize: 16,
-    bombsCount: 40,
-    isGameOver: false,
-    isGameWon: false,
-    currentEmoji: 'happy'
+    boardSize: 2,
+    bombsCount: 1,
+    gameStatus: 'initial',
+    currentEmoji: 'happy',
+    isFirstMove: true
 };
 
 const boardSlice = createSlice({
@@ -62,9 +66,11 @@ const boardSlice = createSlice({
             // /. payload
 
             const rowsData = state.boardData.flat(1);
-            const targetField = rowsData.find(field => field.id === id);
-            if (targetField) {
-                targetField.isFlagged = status;
+            const targetCell = rowsData.find(cell => cell.id === id);
+
+            if (targetCell) {
+                targetCell.isFlagged = status;
+                if (targetCell.isBomb) targetCell.isDefused = status;
             }
         },
         switchWarnedStatus(
@@ -80,22 +86,18 @@ const boardSlice = createSlice({
                 targetField.isWarned = status;
             }
         },
-        switchDefusedStatus(
+        switchFirstMoveStatus(
             state,
-            action: PayloadAction<{ id: string; status: boolean }>
+            action: PayloadAction<{ status: boolean }>
         ) {
-            const { id, status } = action.payload;
+            const { status } = action.payload;
             // /. payload
 
-            const rowsData = state.boardData.flat(1);
-            const targetField = rowsData.find(field => field.id === id);
-            if (targetField) {
-                targetField.isDefused = status;
-            }
+            state.isFirstMove = status;
         },
         setCurrentCellValue(
             state,
-            action: PayloadAction<{ id: string; value: string | number }>
+            action: PayloadAction<{ id: string; value: number }>
         ) {
             const { id, value } = action.payload;
             // /. payload
@@ -104,25 +106,20 @@ const boardSlice = createSlice({
             const targetField = rowsData.find(field => field.id === id);
             if (targetField) {
                 targetField.value = value;
+                targetField.color = determineColorByNumber(value);
             }
         },
-        switchGameOverStatus(
-            state,
-            action: PayloadAction<{ status: boolean }>
-        ) {
+        switchGameStatus(state, action: PayloadAction<{ status: GameStatus }>) {
             const { status } = action.payload;
             // /. payload
 
-            state.isGameOver = status;
+            state.gameStatus = status;
         },
-        switchGameWonStatus(state, action: PayloadAction<{ status: boolean }>) {
-            const { status } = action.payload;
+        switchEmojiStatus(state, action: PayloadAction<{ emoji: Emoji }>) {
+            const { emoji } = action.payload;
             // /. payload
 
-            state.isGameWon = status;
-        },
-        switchEmojiStatuses(state, action: PayloadAction<string>) {
-            state.currentEmoji = action.payload;
+            state.currentEmoji = emoji;
         },
         openBombsMap(state, action: PayloadAction<{ id: string }>) {
             const { id } = action.payload;
@@ -140,17 +137,6 @@ const boardSlice = createSlice({
                     field.isFlipped = true;
                 }
             });
-        },
-        calcBombsCount(state) {
-            const bombsData = state.boardData
-                .flat(1)
-                .filter(field => field.isBomb);
-            const activeBombs = bombsData.filter(field => !field.isDefused);
-
-            state.bombsCount = activeBombs.length;
-        },
-        decrementBombsCount(state) {
-            state.bombsCount -= 1;
         }
     }
 });
@@ -161,14 +147,11 @@ export const {
     switchFlippedStatus,
     switchFlaggedStatus,
     switchWarnedStatus,
-    switchDefusedStatus,
+    switchFirstMoveStatus,
     setCurrentCellValue,
-    switchGameOverStatus,
-    switchGameWonStatus,
-    switchEmojiStatuses,
-    openBombsMap,
-    calcBombsCount,
-    decrementBombsCount
+    switchEmojiStatus,
+    switchGameStatus,
+    openBombsMap
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

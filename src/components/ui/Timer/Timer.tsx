@@ -7,35 +7,25 @@ import { convertTimerValue } from '../../../utils/helpers/convertTimerValue';
 // /. imports
 
 const Timer: React.FC = () => {
-    const { isGameOver, isGameWon } = useAppSelector(state => state.boardSlice);
-
-    const [isTimerReset, setIsTimerReset] = useState<boolean>(false);
     const [time, setTime] = useState<number>(0);
+
+    const { gameStatus } = useAppSelector(state => state.boardSlice);
 
     // /. hooks
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setTime((prev: any) => prev + 1);
+        if (gameStatus === 'initial') return setTime(0);
+
+        const interval = setInterval(() => {
+            setTime(prev => prev + 1);
         }, 1000);
 
-        // disabled inc time state
-        if (isGameOver || isGameWon) {
-            setIsTimerReset(false);
-            clearInterval(timer);
-        } else {
-            setIsTimerReset(true);
+        if (['win', 'lose'].includes(gameStatus)) {
+            clearInterval(interval);
         }
 
-        return () => clearInterval(timer);
-    }, [isGameOver, isGameWon]);
-
-    useEffect(() => {
-        // reset time state value
-        if (!isGameOver && isTimerReset) {
-            setTime(0);
-        }
-    }, [isTimerReset, isGameOver]);
+        return () => clearInterval(interval);
+    }, [gameStatus]);
 
     // /. effects
 

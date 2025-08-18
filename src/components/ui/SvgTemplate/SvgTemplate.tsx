@@ -877,7 +877,7 @@ const SvgTemplate: React.FC<propTypes> = ({ name }) => {
                 </svg>
             );
         default:
-            return <svg></svg>;
+            return null;
     }
 };
 

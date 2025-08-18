@@ -1,15 +1,13 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, current, type PayloadAction } from '@reduxjs/toolkit';
 
-import { determineColorByNumber } from '../../utils/helpers/determineNumberColor';
-
-import type { Irow } from '../../types/boardTypes';
+import type { ICell } from '../../types/boardTypes';
 
 // /. imports
 
 export type GameStatus = 'initial' | 'in-game' | 'win' | 'lose';
 export type Emoji = 'happy' | 'cool' | 'sad' | 'scared';
 interface IboardSlice {
-    boardData: Irow[][];
+    boardData: ICell[][];
     boardSize: number;
     bombsCount: number;
     gameStatus: GameStatus;
@@ -19,8 +17,8 @@ interface IboardSlice {
 
 const initialState: IboardSlice = {
     boardData: [],
-    boardSize: 2,
-    bombsCount: 1,
+    boardSize: 3,
+    bombsCount: 2,
     gameStatus: 'initial',
     currentEmoji: 'happy',
     isFirstMove: true
@@ -30,7 +28,7 @@ const boardSlice = createSlice({
     name: 'boardSlice',
     initialState,
     reducers: {
-        setBoardData(state, action: PayloadAction<Irow[][]>) {
+        setBoardData(state, action: PayloadAction<ICell[][]>) {
             state.boardData = action.payload;
         },
         shuffleBoardData(state, action: PayloadAction<{ bombID: string }>) {
@@ -48,43 +46,29 @@ const boardSlice = createSlice({
                 neighboredField.isBomb = true;
             }
         },
-        switchFlippedStatus(state, action: PayloadAction<{ id: string }>) {
-            const { id } = action.payload;
-            // /. payload
-
-            const rowsData = state.boardData.flat(1);
-            const targetField = rowsData.find(field => field.id === id);
-            if (targetField) {
-                targetField.isFlipped = true;
-            }
-        },
-        switchFlaggedStatus(
+        updateCell(
             state,
-            action: PayloadAction<{ id: string; status: boolean }>
+            action: PayloadAction<{ id: string; changes: Partial<ICell> }>
         ) {
-            const { id, status } = action.payload;
+            const { id, changes } = action.payload;
             // /. payload
 
-            const rowsData = state.boardData.flat(1);
-            const targetCell = rowsData.find(cell => cell.id === id);
-
-            if (targetCell) {
-                targetCell.isFlagged = status;
-                if (targetCell.isBomb) targetCell.isDefused = status;
+            for (const row of state.boardData) {
+                const cell = row.find(cell => cell.id === id);
+                if (cell) {
+                    Object.assign(cell, changes);
+                    break;
+                }
             }
-        },
-        switchWarnedStatus(
-            state,
-            action: PayloadAction<{ id: string; status: boolean }>
-        ) {
-            const { id, status } = action.payload;
-            // /. payload
 
-            const rowsData = state.boardData.flat(1);
-            const targetField = rowsData.find(field => field.id === id);
-            if (targetField) {
-                targetField.isWarned = status;
-            }
+            // state.boardData = state.boardData.map(row => {
+            //     return row.map(cell => {
+            //         if (cell.id === id) {
+            //             return { ...cell, ...changes };
+            //         }
+            //         return cell;
+            //     });
+            // });
         },
         switchFirstMoveStatus(
             state,
@@ -94,20 +78,6 @@ const boardSlice = createSlice({
             // /. payload
 
             state.isFirstMove = status;
-        },
-        setCurrentCellValue(
-            state,
-            action: PayloadAction<{ id: string; value: number }>
-        ) {
-            const { id, value } = action.payload;
-            // /. payload
-
-            const rowsData = state.boardData.flat(1);
-            const targetField = rowsData.find(field => field.id === id);
-            if (targetField) {
-                targetField.value = value;
-                targetField.color = determineColorByNumber(value);
-            }
         },
         switchGameStatus(state, action: PayloadAction<{ status: GameStatus }>) {
             const { status } = action.payload;
@@ -125,18 +95,25 @@ const boardSlice = createSlice({
             const { id } = action.payload;
             // /. payload
 
-            const bombsData = state.boardData
-                .flat(1)
-                .filter(field => field.isBomb);
+            const bombs = state.boardData.flat(1).filter(cell => cell.isBomb);
 
-            bombsData.map(field => {
-                if (field.id === id) {
-                    field.isFlipped = true;
-                    field.isExploded = true;
-                } else {
-                    field.isFlipped = true;
-                }
+            bombs.map(bomb => {
+                bomb.isFlipped = true;
+                bomb.isExploded = bomb.id === id;
             });
+
+            // state.boardData = state.boardData.map(row => {
+            //     return row.map(cell => {
+            //         if (cell.isBomb) {
+            //             return {
+            //                 ...cell,
+            //                 isFlipped: true,
+            //                 isExploded: cell.id === id
+            //             };
+            //         }
+            //         return cell;
+            //     });
+            // });
         }
     }
 });
@@ -144,11 +121,8 @@ const boardSlice = createSlice({
 export const {
     setBoardData,
     shuffleBoardData,
-    switchFlippedStatus,
-    switchFlaggedStatus,
-    switchWarnedStatus,
+    updateCell,
     switchFirstMoveStatus,
-    setCurrentCellValue,
     switchEmojiStatus,
     switchGameStatus,
     openBombsMap

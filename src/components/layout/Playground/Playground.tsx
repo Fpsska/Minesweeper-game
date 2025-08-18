@@ -15,8 +15,6 @@ import {
 
 import { generateBoard } from '../../../utils/generateBoard';
 
-import { Irow } from '../../../types/boardTypes';
-
 import Cell from '../../ui/Cell/Cell';
 
 import './playground.scss';
@@ -31,7 +29,6 @@ const Playground: React.FC = () => {
     const dispatch = useAppDispatch();
 
     const playgroundRef = useRef<HTMLDivElement | null>(null);
-    // const isFirstClick = useRef<boolean>(true);
 
     // /. hooks
 
@@ -71,7 +68,7 @@ const Playground: React.FC = () => {
             ref={playgroundRef}
         >
             {boardData.map(row => {
-                return row.map((cell: Irow) => {
+                return row.map(cell => {
                     return (
                         <Cell
                             key={cell.id}

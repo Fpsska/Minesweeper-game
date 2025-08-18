@@ -1,13 +1,12 @@
-export interface Irow {
-    // TODO: Irow => ICell
+export interface ICell {
     id: string;
     x: number;
     y: number;
-    value: any; // TODO
+    value: string | number; // TODO
     isFlipped: boolean;
     isFlagged: boolean;
     isWarned: boolean;
-    isBomb?: boolean; // TODO: delete?
+    isBomb?: boolean;
     isExploded?: boolean;
     isDefused?: boolean;
     color?: string;

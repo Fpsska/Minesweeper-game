@@ -3,16 +3,16 @@ import { getBombsPositions } from './getBombsPositions';
 import { generateUniqueID } from './helpers/generateUniqueID';
 import { compareCoordinates } from './helpers/compareCoordinates';
 
-import type { Irow, IbombPosition } from '../types/boardTypes';
+import type { ICell, IbombPosition } from '../types/boardTypes';
 
 // /. imports
 
-export const generateBoard = (boardSize: number, bombs: number): Irow[][] => {
-    const board: Irow[][] = [];
+export const generateBoard = (boardSize: number, bombs: number): ICell[][] => {
+    const board: ICell[][] = [];
     const bombsPositions: IbombPosition[] = getBombsPositions(boardSize, bombs);
 
     for (let x = 0; x < boardSize; x++) {
-        const rowArray: Irow[] = [];
+        const rowArray: ICell[] = [];
         for (let y = 0; y < boardSize; y++) {
             rowArray.push({
                 id: generateUniqueID(10),

@@ -1,8 +1,6 @@
 name: Deploy app on github.io
 on:
     push:
-        branches:
-            - release
         tags:
             - 'v[0-9]+.[0-9]+.[0-9]+' # v25.1.0
 
@@ -23,11 +21,6 @@ jobs:
         steps:
             - name: Echo a greeting message
               run: echo "Hello from custom deploy action👋"
-    verify-tag:
-        runs-on: ubuntu-latest
-        steps: # TODO
-            - name: TEST
-              run: echo "test verify-tag job"
     build:
         needs: verify-tag
         strategy:

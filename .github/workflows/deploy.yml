@@ -1,4 +1,5 @@
 name: Deploy app on github.io
+
 on:
     push:
         tags:
@@ -13,7 +14,7 @@ permissions:
 # Allow one concurrent deployment
 concurrency:
     group: 'pages'
-    cancel-in-progress: true
+    cancel-in-progress: true````
 
 jobs:
     greeting:
@@ -22,7 +23,6 @@ jobs:
             - name: Echo a greeting message
               run: echo "Hello from custom deploy action👋"
     build:
-        needs: verify-tag
         strategy:
             matrix:
                 version: [20, 21]
@@ -51,7 +51,7 @@ jobs:
                   path: build
                   name: app-build-${{ matrix.os }}-node-${{ matrix.version }}
     deploy:
-        needs: [verify-tag, build]
+        needs: build
         runs-on: ubuntu-latest
         environment:
             name: github-pages

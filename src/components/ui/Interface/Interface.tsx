@@ -3,7 +3,6 @@ import React from 'react';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 import {
-    type Emoji,
     setBoardData,
     switchGameStatus,
     switchEmojiStatus,
@@ -21,6 +20,7 @@ import winIcon from '../../../assets/icons/win_emoji-icon.svg';
 import Timer from '../Timer/Timer';
 
 import './interface.scss';
+import type { Emoji } from '../../../types/boardTypes';
 
 // /. imports
 
@@ -39,7 +39,7 @@ const emojiToIcon: Partial<Record<Emoji, string>> = {
 
 const Interface: React.FC = () => {
     const { bombsCount, boardSize, gameStatus, currentEmoji } = useAppSelector(
-        state => state.boardSlice
+        (state) => state.boardSlice
     );
 
     const isGameFinished = ['win', 'lose'].includes(gameStatus);

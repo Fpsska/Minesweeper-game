@@ -9,7 +9,7 @@ import { convertTimerValue } from '../../../utils/helpers/convertTimerValue';
 const Timer: React.FC = () => {
     const [time, setTime] = useState<number>(0);
 
-    const { gameStatus } = useAppSelector(state => state.boardSlice);
+    const { gameStatus } = useAppSelector((state) => state.boardSlice);
 
     // /. hooks
 
@@ -17,7 +17,7 @@ const Timer: React.FC = () => {
         if (gameStatus === 'initial') return setTime(0);
 
         const interval = setInterval(() => {
-            setTime(prev => prev + 1);
+            setTime((prev) => prev + 1);
         }, 1000);
 
         if (['win', 'lose'].includes(gameStatus)) {

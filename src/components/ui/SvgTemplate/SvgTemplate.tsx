@@ -4,13 +4,13 @@ import './svg-template.scss';
 
 // /. imports
 
-interface propTypes {
-    name: string;
+interface ISvgTemplate {
+    name: 'flag' | 'warned' | 'bomb' | 'bomb-defused';
 }
 
 // /. interfaces
 
-const SvgTemplate: React.FC<propTypes> = ({ name }) => {
+const SvgTemplate: React.FC<ISvgTemplate> = ({ name }) => {
     switch (name) {
         case 'flag':
             return (

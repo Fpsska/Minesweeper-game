@@ -1,6 +1,6 @@
-import type { ICell } from '../../types/boardTypes';
+import type { TCell } from '../../types/boardTypes';
 
-export function generateClassName(rootClass: string, cell: ICell): string {
+export function generateClassName(rootClass: string, cell: TCell): string {
     if (cell.isFlipped) {
         if (cell.isBomb) {
             if (cell.isExploded) return `${rootClass} flipped bomb exploded`;

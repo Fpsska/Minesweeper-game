@@ -31,7 +31,7 @@ export default defineConfig(({ mode }): UserConfig => {
     const isDockerMode = mode === 'docker';
 
     return {
-        base: !isDockerMode ? 'Minesweeper-game' : undefined,
+        base: !isDockerMode ? '/Minesweeper-game' : undefined,
         server: {
             port: 3000,
             open: true

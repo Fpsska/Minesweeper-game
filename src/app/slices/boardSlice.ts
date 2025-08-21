@@ -1,21 +1,19 @@
 import { createSlice, current, type PayloadAction } from '@reduxjs/toolkit';
 
-import type { ICell } from '../../types/boardTypes';
+import type { TCell, GameStatus, Emoji } from '../../types/boardTypes';
 
 // /. imports
 
-export type GameStatus = 'initial' | 'in-game' | 'win' | 'lose';
-export type Emoji = 'happy' | 'cool' | 'sad' | 'scared';
-interface IboardSlice {
-    boardData: ICell[][];
+type TState = {
+    boardData: TCell[][];
     boardSize: number;
     bombsCount: number;
     gameStatus: GameStatus;
     currentEmoji: Emoji;
     isFirstMove: boolean;
-}
+};
 
-const initialState: IboardSlice = {
+const initialState: TState = {
     boardData: [],
     boardSize: 10,
     bombsCount: 8,
@@ -28,7 +26,7 @@ const boardSlice = createSlice({
     name: 'boardSlice',
     initialState,
     reducers: {
-        setBoardData(state, action: PayloadAction<ICell[][]>) {
+        setBoardData(state, action: PayloadAction<TCell[][]>) {
             state.boardData = action.payload;
         },
         shuffleBoardData(state, action: PayloadAction<{ bombID: string }>) {
@@ -36,8 +34,8 @@ const boardSlice = createSlice({
             // /. payload
 
             const rowsData = state.boardData.flat(1);
-            const targetBomb = rowsData.find(field => field.id === bombID);
-            const neighboredField = rowsData.find(field => !field.isBomb);
+            const targetBomb = rowsData.find((cell) => cell.id === bombID);
+            const neighboredField = rowsData.find((cell) => !cell.isBomb);
 
             if (targetBomb && neighboredField) {
                 targetBomb.value = '';
@@ -48,13 +46,13 @@ const boardSlice = createSlice({
         },
         updateCell(
             state,
-            action: PayloadAction<{ id: string; changes: Partial<ICell> }>
+            action: PayloadAction<{ id: string; changes: Partial<TCell> }>
         ) {
             const { id, changes } = action.payload;
             // /. payload
 
             for (const row of state.boardData) {
-                const cell = row.find(cell => cell.id === id);
+                const cell = row.find((cell) => cell.id === id);
                 if (cell) {
                     Object.assign(cell, changes);
                     break;
@@ -95,9 +93,9 @@ const boardSlice = createSlice({
             const { id } = action.payload;
             // /. payload
 
-            const bombs = state.boardData.flat(1).filter(cell => cell.isBomb);
+            const bombs = state.boardData.flat(1).filter((cell) => cell.isBomb);
 
-            bombs.map(bomb => {
+            bombs.map((bomb) => {
                 bomb.isFlipped = true;
                 bomb.isExploded = bomb.id === id;
             });

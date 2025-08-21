@@ -3,16 +3,16 @@ import { getBombsPositions } from './getBombsPositions';
 import { generateUniqueID } from './helpers/generateUniqueID';
 import { compareCoordinates } from './helpers/compareCoordinates';
 
-import type { ICell, IbombPosition } from '../types/boardTypes';
+import type { TCell, TBombPosition } from '../types/boardTypes';
 
 // /. imports
 
-export const generateBoard = (boardSize: number, bombs: number): ICell[][] => {
-    const board: ICell[][] = [];
-    const bombsPositions: IbombPosition[] = getBombsPositions(boardSize, bombs);
+export const generateBoard = (boardSize: number, bombs: number): TCell[][] => {
+    const board: TCell[][] = [];
+    const bombsPositions: TBombPosition[] = getBombsPositions(boardSize, bombs);
 
     for (let x = 0; x < boardSize; x++) {
-        const rowArray: ICell[] = [];
+        const rowArray: TCell[] = [];
         for (let y = 0; y < boardSize; y++) {
             rowArray.push({
                 id: generateUniqueID(10),
@@ -39,7 +39,7 @@ export const generateBoard = (boardSize: number, bombs: number): ICell[][] => {
 };
 
 function determineInitFieldValue(
-    bombData: IbombPosition[],
+    bombData: TBombPosition[],
     x: number,
     y: number
 ): string {

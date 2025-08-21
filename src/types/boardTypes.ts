@@ -1,4 +1,4 @@
-export interface ICell {
+export type TCell = {
     id: string;
     x: number;
     y: number;
@@ -10,9 +10,12 @@ export interface ICell {
     isExploded?: boolean;
     isDefused?: boolean;
     color?: string;
-}
+};
 
-export interface IbombPosition {
+export type TBombPosition = {
     x: number;
     y: number;
-}
+};
+
+export type GameStatus = 'initial' | 'in-game' | 'win' | 'lose';
+export type Emoji = 'happy' | 'cool' | 'sad' | 'scared';

@@ -1,4 +1,4 @@
-import React, { useEffect, type ReactNode } from 'react';
+import React from 'react'; // useEffect
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
@@ -14,60 +14,38 @@ import {
 import { findNeighboringCells } from '../../../utils/findNeighboringCells';
 import { generateClassName } from '../../../utils/helpers/generateClassName';
 
-import SvgTemplate from '../SvgTemplate/SvgTemplate';
-
 import './cell.scss';
 import { determineColorByNumber } from '../../../utils/helpers/determineNumberColor';
 
-import type { ICell } from '../../../types/boardTypes';
+import Icon from './components/Icon/Icon';
+
+import type { TCell } from '../../../types/boardTypes';
 
 // /. imports
-
-interface ICellProps extends ICell {
-    children: ReactNode;
-}
+interface ITCellProps extends TCell {}
 
 // /. interfaces
 
-const Cell: React.FC<ICellProps> = cell => {
-    const {
-        children,
-        id,
-        value,
-        color,
-        x,
-        y,
-        isFlipped,
-        isFlagged,
-        isWarned,
-        isBomb,
-        isDefused
-    } = cell;
+const Cell: React.FC<ITCellProps> = (cell) => {
+    const { id, color, x, y, isFlipped, isFlagged, isWarned, isBomb } = cell;
 
     const { boardData, gameStatus, isFirstMove } = useAppSelector(
-        state => state.boardSlice
+        (state) => state.boardSlice
     );
     const dispatch = useAppDispatch();
+
+    // /. hooks
 
     const isGameFinished = ['win', 'lose'].includes(gameStatus);
     const isCellDisabled = isGameFinished || isFlipped;
 
-    const isFlagVisible = !isFlipped && isFlagged && !isWarned;
-    const isBombVisible = isFlipped && isBomb && value === 'B';
-    const isDefusebBombVisible =
-        isFlipped && isBomb && value === 'B' && isDefused && isFlagged;
-    const isNumberVisible =
-        isFlipped && !isFlagged && !isWarned && value !== 'B';
-
-    // /. hooks
-
     const computeCellsBody = (): void => {
         const neighboredCells = findNeighboringCells(boardData, x, y);
-        const neighboredBombs = neighboredCells.filter(cell => cell.isBomb);
+        const neighboredBombs = neighboredCells.filter((cell) => cell.isBomb);
 
         if (neighboredBombs.length === 0) {
             // update all neighbored empty, safe fields (not flagged)
-            neighboredCells.forEach(cell => {
+            neighboredCells.forEach((cell) => {
                 if (!cell.isFlagged) {
                     dispatch(
                         updateCell({
@@ -174,28 +152,15 @@ const Cell: React.FC<ICellProps> = cell => {
         <button
             id={id}
             className={generateClassName('cell', cell)}
-            aria-label={isNumberVisible ? '' : 'open field'} // TODO
+            // aria-label={isNumberVisible ? '' : 'open field'} // TODO
             disabled={isCellDisabled}
             style={{ color }}
-            onContextMenu={e => onCellRightClick(e)}
-            onMouseDown={e => onMouseDown(e)}
+            onContextMenu={(e) => onCellRightClick(e)}
+            onMouseDown={(e) => onMouseDown(e)}
             onMouseUp={onMouseUp}
             onClick={onCellLeftClick}
         >
-            {/* // TODO */}
-            {isNumberVisible ? (
-                children
-            ) : isFlagVisible ? (
-                <SvgTemplate name="flag" />
-            ) : isWarned ? (
-                <SvgTemplate name="warned" />
-            ) : isDefusebBombVisible ? (
-                <SvgTemplate name="bomb-defused" />
-            ) : isBombVisible ? (
-                <SvgTemplate name="bomb" />
-            ) : (
-                ''
-            )}
+            <Icon {...cell} />
         </button>
     );
 };

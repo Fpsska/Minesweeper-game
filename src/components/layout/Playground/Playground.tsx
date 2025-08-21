@@ -23,7 +23,7 @@ import './playground.scss';
 
 const Playground: React.FC = () => {
     const { boardSize, bombsCount, boardData, gameStatus } = useAppSelector(
-        state => state.boardSlice
+        (state) => state.boardSlice
     );
 
     const dispatch = useAppDispatch();
@@ -50,8 +50,10 @@ const Playground: React.FC = () => {
 
         const cellsToValidate = boardData
             .flat(1)
-            .filter(cell => !cell.isFlipped && !cell.isFlagged);
-        const isAllCellsFlipped = cellsToValidate.every(cell => cell.isFlipped);
+            .filter((cell) => !cell.isFlipped && !cell.isFlagged);
+        const isAllCellsFlipped = cellsToValidate.every(
+            (cell) => cell.isFlipped
+        );
 
         if (isAllCellsFlipped) {
             dispatch(switchGameStatus({ status: 'win' }));
@@ -67,15 +69,13 @@ const Playground: React.FC = () => {
             className="playground-area"
             ref={playgroundRef}
         >
-            {boardData.map(row => {
-                return row.map(cell => {
+            {boardData.map((row) => {
+                return row.map((cell) => {
                     return (
                         <Cell
                             key={cell.id}
                             {...cell}
-                        >
-                            {cell.value}
-                        </Cell>
+                        />
                     );
                 });
             })}

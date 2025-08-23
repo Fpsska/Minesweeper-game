@@ -1,5 +1,7 @@
 import { createSlice, current, type PayloadAction } from '@reduxjs/toolkit';
 
+import { generateBoard } from '../../utils/generateBoard';
+
 import type { TCell, GameStatus, Emoji } from '../../types/boardTypes';
 
 // /. imports
@@ -83,6 +85,12 @@ const boardSlice = createSlice({
 
             state.gameStatus = status;
         },
+        restartGame(state) {
+            state.gameStatus = 'initial';
+            state.currentEmoji = 'happy';
+            state.isFirstMove = true;
+            state.boardData = generateBoard(state.boardSize, state.bombsCount);
+        },
         switchEmojiStatus(state, action: PayloadAction<{ emoji: Emoji }>) {
             const { emoji } = action.payload;
             // /. payload
@@ -97,7 +105,7 @@ const boardSlice = createSlice({
 
             bombs.map((bomb) => {
                 bomb.isFlipped = true;
-                bomb.isExploded = bomb.id === id;
+                bomb.status = bomb.id === id ? 'IS_EXPLODED' : bomb.status;
             });
 
             // state.boardData = state.boardData.map(row => {
@@ -123,6 +131,7 @@ export const {
     switchFirstMoveStatus,
     switchEmojiStatus,
     switchGameStatus,
+    restartGame,
     openBombsMap
 } = boardSlice.actions;
 

@@ -2,14 +2,11 @@ export type TCell = {
     id: string;
     x: number;
     y: number;
-    value: string | number; // TODO
-    isFlipped: boolean;
-    isFlagged: boolean;
-    isWarned: boolean;
-    isBomb?: boolean;
-    isExploded?: boolean;
-    isDefused?: boolean;
+    value: string | number;
     color?: string;
+    isFlipped: boolean;
+    isBomb?: boolean;
+    status: CellStatus;
 };
 
 export type TBombPosition = {
@@ -17,5 +14,11 @@ export type TBombPosition = {
     y: number;
 };
 
+export type CellStatus =
+    | 'IS_DEFAULT'
+    | 'IS_FLAGGED'
+    | 'IS_WARNED'
+    | 'IS_EXPLODED'
+    | 'IS_DEFUSED';
 export type GameStatus = 'initial' | 'in-game' | 'win' | 'lose';
 export type Emoji = 'happy' | 'cool' | 'sad' | 'scared';

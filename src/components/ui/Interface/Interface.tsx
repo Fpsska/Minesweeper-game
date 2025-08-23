@@ -2,14 +2,8 @@ import React from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
-import {
-    setBoardData,
-    switchGameStatus,
-    switchEmojiStatus,
-    switchFirstMoveStatus
-} from '../../../app/slices/boardSlice';
+import { restartGame } from '../../../app/slices/boardSlice';
 
-import { generateBoard } from '../../../utils/generateBoard';
 import { convertTimerValue } from '../../../utils/helpers/convertTimerValue';
 
 import happyIcon from '../../../assets/icons/default_emoji-icon.svg';
@@ -38,26 +32,14 @@ const emojiToIcon: Partial<Record<Emoji, string>> = {
 };
 
 const Interface: React.FC = () => {
-    const { bombsCount, boardSize, gameStatus, currentEmoji } = useAppSelector(
+    const { bombsCount, gameStatus, currentEmoji } = useAppSelector(
         (state) => state.boardSlice
     );
-
-    const isGameFinished = ['win', 'lose'].includes(gameStatus);
-
     const dispatch = useAppDispatch();
 
     // /. hooks
 
-    const onButtonStatusClick = (): void => {
-        dispatch(switchGameStatus({ status: 'initial' }));
-        dispatch(switchEmojiStatus({ emoji: 'happy' }));
-        dispatch(switchFirstMoveStatus({ status: true }));
-
-        const newBoard = generateBoard(boardSize, bombsCount);
-        dispatch(setBoardData(newBoard));
-    };
-
-    // /. functions
+    const isGameFinished = ['win', 'lose'].includes(gameStatus);
 
     return (
         <div className="board__information information">
@@ -78,7 +60,8 @@ const Interface: React.FC = () => {
                     style={{
                         backgroundImage: `url("${emojiToIcon[currentEmoji]}")`
                     }}
-                    onClick={() => isGameFinished && onButtonStatusClick()}
+                    disabled={!isGameFinished}
+                    onClick={() => dispatch(restartGame())}
                 ></button>
             </div>
             <div className="information__timer">

@@ -13,17 +13,15 @@ interface IIcon extends TCell {}
 function getRenderValue(
     cell: TCell
 ): string | number | React.JSX.Element | null {
-    const { value, isFlipped, isFlagged, isWarned, isBomb, isDefused } = cell;
+    const { value, isFlipped, isBomb, status } = cell;
 
-    if (isFlagged) {
-        return <SvgTemplate name="flag" />;
-    }
-    if (isWarned) {
-        return <SvgTemplate name="warned" />;
-    }
+    if (status === 'IS_FLAGGED') return <SvgTemplate name="flag" />;
+    if (status === 'IS_WARNED') return <SvgTemplate name="warned" />;
     if (isBomb) {
         if (isFlipped) return <SvgTemplate name="bomb" />;
-        if (isFlipped && isDefused) return <SvgTemplate name="bomb-defused" />;
+        if (isFlipped && status === 'IS_DEFUSED') {
+            return <SvgTemplate name="bomb-defused" />;
+        }
         return null;
     }
 

@@ -7,9 +7,15 @@ import type { TCell, TBombPosition } from '../types/boardTypes';
 
 // /. imports
 
-export const generateBoard = (boardSize: number, bombs: number): TCell[][] => {
+export const generateBoard = (
+    boardSize: number,
+    bombsCount: number
+): TCell[][] => {
     const board: TCell[][] = [];
-    const bombsPositions: TBombPosition[] = getBombsPositions(boardSize, bombs);
+    const bombsPositions: TBombPosition[] = getBombsPositions(
+        boardSize,
+        bombsCount
+    );
 
     for (let x = 0; x < boardSize; x++) {
         const rowArray: TCell[] = [];
@@ -18,17 +24,13 @@ export const generateBoard = (boardSize: number, bombs: number): TCell[][] => {
                 id: generateUniqueID(10),
                 x,
                 y,
-                value: determineInitFieldValue(bombsPositions, x, y), // 'B' or ''
-
+                value: determineInitCellValue(bombsPositions, x, y), // 'B' or ''
                 // compare current bombPositions (x,y) with current rowArray position (x,y)
-                isBomb: bombsPositions.some(
-                    compareCoordinates.bind(null, { x, y })
-                ),
+                status: 'IS_DEFAULT',
                 isFlipped: false,
-                isFlagged: false,
-                isWarned: false,
-                isExploded: false,
-                isDefused: false
+                isBomb: bombsPositions.some(
+                    compareCoordinates.bind(null, { x, y }) // TODO
+                )
             });
         }
         board.push(rowArray);
@@ -38,11 +40,13 @@ export const generateBoard = (boardSize: number, bombs: number): TCell[][] => {
     return board;
 };
 
-function determineInitFieldValue(
-    bombData: TBombPosition[],
+function determineInitCellValue(
+    bombsPositions: TBombPosition[],
     x: number,
     y: number
 ): string {
-    const isBombFiled = bombData.some(compareCoordinates.bind(null, { x, y }));
-    return isBombFiled ? 'B' : '';
+    const isBombCell = bombsPositions.some(
+        compareCoordinates.bind(null, { x, y }) // TODO
+    );
+    return isBombCell ? 'B' : '';
 }

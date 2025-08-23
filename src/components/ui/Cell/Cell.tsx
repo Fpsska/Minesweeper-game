@@ -1,4 +1,4 @@
-import React from 'react'; // useEffect
+import React, { useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
@@ -27,7 +27,7 @@ interface ITCellProps extends TCell {}
 // /. interfaces
 
 const Cell: React.FC<ITCellProps> = (cell) => {
-    const { id, color, x, y, isFlipped, isFlagged, isWarned, isBomb } = cell;
+    const { id, color, x, y, isFlipped, isBomb, status } = cell;
 
     const { boardData, gameStatus, isFirstMove } = useAppSelector(
         (state) => state.boardSlice
@@ -38,15 +38,16 @@ const Cell: React.FC<ITCellProps> = (cell) => {
 
     const isGameFinished = ['win', 'lose'].includes(gameStatus);
     const isCellDisabled = isGameFinished || isFlipped;
+    const isCellMarked = ['IS_FLAGGED', 'IS_WARNED'].includes(status);
 
     const computeCellsBody = (): void => {
         const neighboredCells = findNeighboringCells(boardData, x, y);
         const neighboredBombs = neighboredCells.filter((cell) => cell.isBomb);
 
         if (neighboredBombs.length === 0) {
-            // update all neighbored empty, safe fields (not flagged)
+            // update all neighbored cells (empty/not flagged/not warned)
             neighboredCells.forEach((cell) => {
-                if (!cell.isFlagged) {
+                if (!['IS_FLAGGED', 'IS_WARNED'].includes(cell.status)) {
                     dispatch(
                         updateCell({
                             id: cell.id,
@@ -72,8 +73,10 @@ const Cell: React.FC<ITCellProps> = (cell) => {
     };
 
     const onCellLeftClick = (): void => {
+        if (isCellDisabled || isCellMarked) return;
+
         if (isFirstMove) {
-            if (isFlagged || isWarned) return;
+            console.log('FIRST');
             dispatch(switchGameStatus({ status: 'in-game' }));
 
             if (isBomb) {
@@ -84,8 +87,7 @@ const Cell: React.FC<ITCellProps> = (cell) => {
             computeCellsBody();
             dispatch(switchFirstMoveStatus({ status: false }));
         } else {
-            if (isFlagged || isWarned) return;
-
+            console.log('SECOND');
             if (isBomb) {
                 // console.log('SECOND + BOMB');
                 dispatch(updateCell({ id, changes: { isFlipped: true } }));
@@ -101,46 +103,28 @@ const Cell: React.FC<ITCellProps> = (cell) => {
 
     const onCellRightClick = (e: React.MouseEvent): void => {
         e.preventDefault();
+
+        if (isFirstMove) dispatch(switchGameStatus({ status: 'in-game' }));
         if (isFlipped || isGameFinished) return;
 
-        dispatch(
-            updateCell({ id, changes: { isFlagged: true, isDefused: isBomb } })
-        );
+        dispatch(updateCell({ id, changes: { status: 'IS_FLAGGED' } }));
 
-        if (isFlagged) {
-            dispatch(
-                updateCell({
-                    id,
-                    changes: {
-                        isFlagged: false,
-                        isDefused: false,
-                        isWarned: true
-                    }
-                })
-            );
+        if (status === 'IS_FLAGGED') {
+            dispatch(updateCell({ id, changes: { status: 'IS_WARNED' } }));
         }
 
-        if (isWarned) {
-            dispatch(
-                updateCell({
-                    id,
-                    changes: {
-                        isWarned: false,
-                        isFlagged: false,
-                        isDefused: false
-                    }
-                })
-            );
+        if (status === 'IS_WARNED') {
+            dispatch(updateCell({ id, changes: { status: 'IS_DEFAULT' } }));
         }
     };
 
     const onMouseDown = (e: React.MouseEvent): void => {
-        if (e.button === 2 || isFlagged || isWarned) return;
+        if (isCellDisabled || isCellMarked || e.button === 2) return;
         dispatch(switchEmojiStatus({ emoji: 'scared' }));
     };
 
     const onMouseUp = (e: React.MouseEvent): void => {
-        if (e.button === 2 || isFlagged || isWarned) return;
+        if (isCellDisabled || isCellMarked || e.button === 2) return;
         dispatch(switchEmojiStatus({ emoji: 'happy' }));
     };
 
@@ -152,11 +136,11 @@ const Cell: React.FC<ITCellProps> = (cell) => {
         <button
             id={id}
             className={generateClassName('cell', cell)}
-            // aria-label={isNumberVisible ? '' : 'open field'} // TODO
+            aria-label={isFlipped ? undefined : 'open cell'}
             disabled={isCellDisabled}
             style={{ color }}
-            onContextMenu={(e) => onCellRightClick(e)}
-            onMouseDown={(e) => onMouseDown(e)}
+            onContextMenu={onCellRightClick}
+            onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
             onClick={onCellLeftClick}
         >

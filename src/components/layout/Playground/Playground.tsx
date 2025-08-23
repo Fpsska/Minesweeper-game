@@ -50,7 +50,7 @@ const Playground: React.FC = () => {
 
         const cellsToValidate = boardData
             .flat(1)
-            .filter((cell) => !cell.isFlipped && !cell.isFlagged);
+            .filter((cell) => !cell.isFlipped && cell.status !== 'IS_FLAGGED');
         const isAllCellsFlipped = cellsToValidate.every(
             (cell) => cell.isFlipped
         );

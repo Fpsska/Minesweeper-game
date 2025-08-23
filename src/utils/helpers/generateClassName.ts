@@ -1,15 +1,23 @@
 import type { TCell } from '../../types/boardTypes';
 
-export function generateClassName(rootClass: string, cell: TCell): string {
-    if (cell.isFlipped) {
-        if (cell.isBomb) {
-            if (cell.isExploded) return `${rootClass} flipped bomb exploded`;
-            if (cell.isFlagged) return `${rootClass} flipped bomb defused`;
+export function generateClassName(
+    rootClass: string,
+    { status, isFlipped, isBomb }: TCell
+): string {
+    if (isFlipped) {
+        if (isBomb) {
+            if (status === 'IS_EXPLODED') {
+                return `${rootClass} flipped bomb exploded`;
+            }
+            if (status === 'IS_FLAGGED') {
+                return `${rootClass} flipped bomb defused`;
+            }
+
             return `${rootClass} flipped bomb`;
         }
         return `${rootClass} flipped`;
     }
-    if (cell.isFlagged) return `${rootClass} marked`;
-    if (cell.isWarned) return `${rootClass} warned`;
+    if (status === 'IS_FLAGGED') return `${rootClass} marked`;
+    if (status === 'IS_WARNED') return `${rootClass} warned`;
     return rootClass;
 }

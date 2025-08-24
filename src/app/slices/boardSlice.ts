@@ -2,18 +2,9 @@ import { createSlice, current, type PayloadAction } from '@reduxjs/toolkit';
 
 import { generateBoard } from '../../utils/generateBoard';
 
-import type { TCell, GameStatus, Emoji } from '../../types/boardTypes';
+import type { TState, TCell, GameStatus, Emoji } from '../../types/boardTypes';
 
 // /. imports
-
-type TState = {
-    boardData: TCell[][];
-    boardSize: number;
-    bombsCount: number;
-    gameStatus: GameStatus;
-    currentEmoji: Emoji;
-    isFirstMove: boolean;
-};
 
 const initialState: TState = {
     boardData: [],
@@ -35,15 +26,17 @@ const boardSlice = createSlice({
             const { bombID } = action.payload;
             // /. payload
 
-            const rowsData = state.boardData.flat(1);
-            const targetBomb = rowsData.find((cell) => cell.id === bombID);
-            const neighboredField = rowsData.find((cell) => !cell.isBomb);
+            for (const row of state.boardData) {
+                const targetBomb = row.find((cell) => cell.id === bombID);
+                const neighboredCell = row.find((cell) => !cell.isBomb);
 
-            if (targetBomb && neighboredField) {
-                targetBomb.value = '';
-                targetBomb.isBomb = false;
-                neighboredField.value = 'B';
-                neighboredField.isBomb = true;
+                if (targetBomb && neighboredCell) {
+                    targetBomb.value = '';
+                    targetBomb.isBomb = false;
+                    neighboredCell.value = 'B';
+                    neighboredCell.isBomb = true;
+                    break;
+                }
             }
         },
         updateCell(
@@ -55,20 +48,12 @@ const boardSlice = createSlice({
 
             for (const row of state.boardData) {
                 const cell = row.find((cell) => cell.id === id);
+
                 if (cell) {
                     Object.assign(cell, changes);
                     break;
                 }
             }
-
-            // state.boardData = state.boardData.map(row => {
-            //     return row.map(cell => {
-            //         if (cell.id === id) {
-            //             return { ...cell, ...changes };
-            //         }
-            //         return cell;
-            //     });
-            // });
         },
         switchFirstMoveStatus(
             state,
@@ -101,25 +86,13 @@ const boardSlice = createSlice({
             const { id } = action.payload;
             // /. payload
 
-            const bombs = state.boardData.flat(1).filter((cell) => cell.isBomb);
-
-            bombs.map((bomb) => {
-                bomb.isFlipped = true;
-                bomb.status = bomb.id === id ? 'IS_EXPLODED' : bomb.status;
-            });
-
-            // state.boardData = state.boardData.map(row => {
-            //     return row.map(cell => {
-            //         if (cell.isBomb) {
-            //             return {
-            //                 ...cell,
-            //                 isFlipped: true,
-            //                 isExploded: cell.id === id
-            //             };
-            //         }
-            //         return cell;
-            //     });
-            // });
+            for (const row of state.boardData) {
+                for (const cell of row) {
+                    if (!cell.isBomb) continue;
+                    cell.isFlipped = true;
+                    cell.status = cell.id === id ? 'IS_EXPLODED' : cell.status;
+                }
+            }
         }
     }
 });

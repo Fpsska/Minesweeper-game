@@ -1,3 +1,12 @@
+export type TState = {
+    boardData: TCell[][];
+    boardSize: number;
+    bombsCount: number;
+    gameStatus: GameStatus;
+    currentEmoji: Emoji;
+    isFirstMove: boolean;
+};
+
 export type TCell = {
     id: string;
     x: number;

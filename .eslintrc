@@ -81,6 +81,7 @@
         "newlines-between": "always-and-inside-groups"
       }
     ],
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "react/react-in-jsx-scope": "off"
   }
 }

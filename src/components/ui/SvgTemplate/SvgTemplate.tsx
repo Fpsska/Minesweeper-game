@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC } from 'react';
 
 import './svg-template.scss';
 
@@ -17,7 +17,7 @@ interface ISvgTemplate {
 
 // /. interfaces
 
-const SvgTemplate: React.FC<ISvgTemplate> = ({ name }) => {
+const SvgTemplate: FC<ISvgTemplate> = ({ name }) => {
     switch (name) {
         case 'flag':
             return (

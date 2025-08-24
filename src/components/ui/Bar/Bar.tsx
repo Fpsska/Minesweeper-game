@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC } from 'react';
 
 import gameIcon from '../../../assets/icons/game-icon.svg';
 
@@ -9,7 +9,7 @@ import SvgTemplate from '../SvgTemplate/SvgTemplate';
 
 // /. imports
 
-const Bar: React.FC = () => {
+const Bar: FC = () => {
     const dispatch = useAppDispatch();
 
     // /. hooks

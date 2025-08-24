@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { type FC, useState, useEffect } from 'react';
 
 import { useAppSelector } from '../../../app/hooks';
 
@@ -6,10 +6,10 @@ import { convertTimerValue } from '../../../utils/helpers/convertTimerValue';
 
 // /. imports
 
-const Timer: React.FC = () => {
+const Timer: FC = () => {
     const [time, setTime] = useState<number>(0);
 
-    const { gameStatus } = useAppSelector((state) => state.boardSlice);
+    const gameStatus = useAppSelector((state) => state.boardSlice.gameStatus);
 
     // /. hooks
 

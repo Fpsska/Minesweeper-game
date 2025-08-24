@@ -1,9 +1,4 @@
-import React, {
-    // useState,
-    useRef,
-    useEffect,
-    useLayoutEffect
-} from 'react';
+import { type FC, useRef, useEffect, useLayoutEffect } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
@@ -21,13 +16,13 @@ import './playground.scss';
 
 // /. imports
 
-const Playground: React.FC = () => {
-    const { boardSize, bombsCount, boardData, gameStatus } = useAppSelector(
-        (state) => state.boardSlice
-    );
+const Playground: FC = () => {
+    const boardSize = useAppSelector((state) => state.boardSlice.boardSize);
+    const bombsCount = useAppSelector((state) => state.boardSlice.bombsCount);
+    const boardData = useAppSelector((state) => state.boardSlice.boardData);
+    const gameStatus = useAppSelector((state) => state.boardSlice.gameStatus);
 
     const dispatch = useAppDispatch();
-
     const playgroundRef = useRef<HTMLDivElement | null>(null);
 
     // /. hooks
@@ -44,23 +39,24 @@ const Playground: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        // Handle for game over (win)
-        if (gameStatus !== 'in-game') return;
-
-        const cellsToValidate = boardData
-            .flat(1)
-            .filter((cell) => !cell.isFlipped && cell.status !== 'IS_FLAGGED');
-        const isAllCellsFlipped = cellsToValidate.every(
-            (cell) => cell.isFlipped
-        );
-
-        if (isAllCellsFlipped) {
-            dispatch(switchGameStatus({ status: 'win' }));
-            dispatch(switchEmojiStatus({ emoji: 'cool' }));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [boardData, gameStatus]);
+    // TODO
+    // useEffect(() => {
+    //     // Handle for game over (win)
+    //     if (gameStatus !== 'in-game') return;
+    //
+    //     const cellsToValidate = boardData
+    //         .flat(1)
+    //         .filter((cell) => !cell.isFlipped && cell.status !== 'IS_FLAGGED');
+    //     const isAllCellsFlipped = cellsToValidate.every(
+    //         (cell) => cell.isFlipped
+    //     );
+    //
+    //     if (isAllCellsFlipped) {
+    //         dispatch(switchGameStatus({ status: 'win' }));
+    //         dispatch(switchEmojiStatus({ emoji: 'cool' }));
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [boardData, gameStatus]);
 
     // /. effects
 

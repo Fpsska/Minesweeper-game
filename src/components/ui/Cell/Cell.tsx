@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { type FC, type MouseEvent, useEffect } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
@@ -22,11 +22,12 @@ import Icon from './components/Icon/Icon';
 import type { TCell } from '../../../types/boardTypes';
 
 // /. imports
+
 interface ITCellProps extends TCell {}
 
 // /. interfaces
 
-const Cell: React.FC<ITCellProps> = (cell) => {
+const Cell: FC<ITCellProps> = (cell) => {
     const { id, color, x, y, isFlipped, isBomb, status } = cell;
 
     const { boardData, gameStatus, isFirstMove } = useAppSelector(
@@ -101,7 +102,7 @@ const Cell: React.FC<ITCellProps> = (cell) => {
         }
     };
 
-    const onCellRightClick = (e: React.MouseEvent): void => {
+    const onCellRightClick = (e: MouseEvent): void => {
         e.preventDefault();
 
         if (isFirstMove) dispatch(switchGameStatus({ status: 'in-game' }));
@@ -118,12 +119,12 @@ const Cell: React.FC<ITCellProps> = (cell) => {
         }
     };
 
-    const onMouseDown = (e: React.MouseEvent): void => {
+    const onMouseDown = (e: MouseEvent): void => {
         if (isCellDisabled || isCellMarked || e.button === 2) return;
         dispatch(switchEmojiStatus({ emoji: 'scared' }));
     };
 
-    const onMouseUp = (e: React.MouseEvent): void => {
+    const onMouseUp = (e: MouseEvent): void => {
         if (isCellDisabled || isCellMarked || e.button === 2) return;
         dispatch(switchEmojiStatus({ emoji: 'happy' }));
     };

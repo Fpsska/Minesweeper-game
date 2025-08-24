@@ -1,10 +1,10 @@
-import React from 'react';
+import { type FC } from 'react';
 
 import './menu.scss';
 
 // /. imports
 
-const Menu: React.FC = () => {
+const Menu: FC = () => {
     return (
         <ul className="menu">
             <li className="menu__option">

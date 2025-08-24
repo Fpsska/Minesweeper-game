@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
@@ -31,10 +31,13 @@ const emojiToIcon: Partial<Record<Emoji, string>> = {
     scared: scaredIcon
 };
 
-const Interface: React.FC = () => {
-    const { bombsCount, gameStatus, currentEmoji } = useAppSelector(
-        (state) => state.boardSlice
+const Interface: FC = () => {
+    const bombsCount = useAppSelector((state) => state.boardSlice.bombsCount);
+    const gameStatus = useAppSelector((state) => state.boardSlice.gameStatus);
+    const currentEmoji = useAppSelector(
+        (state) => state.boardSlice.currentEmoji
     );
+
     const dispatch = useAppDispatch();
 
     // /. hooks

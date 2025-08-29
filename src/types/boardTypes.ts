@@ -25,6 +25,7 @@ export type TBombPosition = {
 
 export type CellStatus =
     | 'IS_DEFAULT'
+    | 'IS_COMPUTED'
     | 'IS_FLAGGED'
     | 'IS_WARNED'
     | 'IS_EXPLODED'

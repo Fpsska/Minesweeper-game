@@ -30,15 +30,17 @@ interface ITCellProps extends TCell {}
 const Cell: FC<ITCellProps> = (cell) => {
     const { id, color, x, y, isFlipped, isBomb, status } = cell;
 
-    const { boardData, gameStatus, isFirstMove } = useAppSelector(
-        (state) => state.boardSlice
-    );
+    const boardData = useAppSelector((state) => state.boardSlice.boardData);
+    const gameStatus = useAppSelector((state) => state.boardSlice.gameStatus);
+    const isFirstMove = useAppSelector((state) => state.boardSlice.isFirstMove);
+
     const dispatch = useAppDispatch();
 
     // /. hooks
 
     const isGameFinished = ['win', 'lose'].includes(gameStatus);
-    const isCellDisabled = isGameFinished || isFlipped;
+    const isCellDisabled =
+        isGameFinished || (isFlipped && status === 'IS_COMPUTED');
     const isCellMarked = ['IS_FLAGGED', 'IS_WARNED'].includes(status);
 
     const computeCellsBody = (): void => {
@@ -52,7 +54,7 @@ const Cell: FC<ITCellProps> = (cell) => {
                     dispatch(
                         updateCell({
                             id: cell.id,
-                            changes: { isFlipped: true }
+                            changes: { isFlipped: true, status: 'IS_COMPUTED' }
                         })
                     );
                 }
@@ -66,6 +68,7 @@ const Cell: FC<ITCellProps> = (cell) => {
                 id,
                 changes: {
                     isFlipped: true,
+                    status: 'IS_COMPUTED',
                     value: neighboredBombs.length,
                     color: determineColorByNumber(neighboredBombs.length)
                 }
@@ -77,7 +80,7 @@ const Cell: FC<ITCellProps> = (cell) => {
         if (isCellDisabled || isCellMarked) return;
 
         if (isFirstMove) {
-            console.log('FIRST');
+            // console.log('FIRST');
             dispatch(switchGameStatus({ status: 'in-game' }));
 
             if (isBomb) {
@@ -88,7 +91,7 @@ const Cell: FC<ITCellProps> = (cell) => {
             computeCellsBody();
             dispatch(switchFirstMoveStatus({ status: false }));
         } else {
-            console.log('SECOND');
+            // console.log('SECOND');
             if (isBomb) {
                 // console.log('SECOND + BOMB');
                 dispatch(updateCell({ id, changes: { isFlipped: true } }));
@@ -105,8 +108,12 @@ const Cell: FC<ITCellProps> = (cell) => {
     const onCellRightClick = (e: MouseEvent): void => {
         e.preventDefault();
 
-        if (isFirstMove) dispatch(switchGameStatus({ status: 'in-game' }));
-        if (isFlipped || isGameFinished) return;
+        if (isFirstMove) {
+            dispatch(switchGameStatus({ status: 'in-game' }));
+            dispatch(switchFirstMoveStatus({ status: false }));
+        }
+
+        if ((isFlipped && status === 'IS_COMPUTED') || isGameFinished) return;
 
         dispatch(updateCell({ id, changes: { status: 'IS_FLAGGED' } }));
 

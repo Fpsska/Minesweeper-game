@@ -7,6 +7,7 @@ import type { TCell, TBombPosition } from '../types/boardTypes';
 
 // /. imports
 
+// TODO: maybe async?
 export const generateBoard = (
     boardSize: number,
     bombsCount: number

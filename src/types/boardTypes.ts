@@ -18,7 +18,7 @@ export type TCell = {
     status: CellStatus;
 };
 
-export type TBombPosition = {
+export type TCoords = {
     x: number;
     y: number;
 };

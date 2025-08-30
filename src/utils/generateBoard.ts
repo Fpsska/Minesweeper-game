@@ -1,9 +1,9 @@
 import { getBombsPositions } from './getBombsPositions';
 
 import { generateUniqueID } from './helpers/generateUniqueID';
-import { compareCoordinates } from './helpers/compareCoordinates';
+import { getInitCellValue } from './helpers/getInitCellValue';
 
-import type { TCell, TBombPosition } from '../types/boardTypes';
+import type { TCell, TCoords } from '../types/boardTypes';
 
 // /. imports
 
@@ -13,41 +13,26 @@ export const generateBoard = (
     bombsCount: number
 ): TCell[][] => {
     const board: TCell[][] = [];
-    const bombsPositions: TBombPosition[] = getBombsPositions(
-        boardSize,
-        bombsCount
-    );
+    const bombsPositions: TCoords[] = getBombsPositions(boardSize, bombsCount);
 
     for (let x = 0; x < boardSize; x++) {
         const rowArray: TCell[] = [];
+
         for (let y = 0; y < boardSize; y++) {
+            const value = getInitCellValue(bombsPositions, x, y); // 'B' or ''
+
             rowArray.push({
                 id: generateUniqueID(10),
                 x,
                 y,
-                value: determineInitCellValue(bombsPositions, x, y), // 'B' or ''
-                // compare current bombPositions (x,y) with current rowArray position (x,y)
+                value,
                 status: 'IS_DEFAULT',
                 isFlipped: false,
-                isBomb: bombsPositions.some(
-                    compareCoordinates.bind(null, { x, y }) // TODO
-                )
+                isBomb: Boolean(value)
             });
         }
         board.push(rowArray);
     }
-    // /. generate initial fields data
 
     return board;
 };
-
-function determineInitCellValue(
-    bombsPositions: TBombPosition[],
-    x: number,
-    y: number
-): string {
-    const isBombCell = bombsPositions.some(
-        compareCoordinates.bind(null, { x, y }) // TODO
-    );
-    return isBombCell ? 'B' : '';
-}

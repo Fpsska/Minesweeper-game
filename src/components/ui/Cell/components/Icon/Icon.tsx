@@ -15,12 +15,19 @@ function getRenderValue(
 ): string | number | React.JSX.Element | null {
     const { value, isFlipped, isBomb, status } = cell;
 
-    if (status === 'IS_FLAGGED') return <SvgTemplate name="flag" />;
-    if (status === 'IS_WARNED') return <SvgTemplate name="warned" />;
+    if (!isFlipped) {
+        if (status === 'IS_FLAGGED') return <SvgTemplate name="flag" />;
+        if (status === 'IS_WARNED') return <SvgTemplate name="warned" />;
+    }
+
     if (isBomb) {
-        if (isFlipped) return <SvgTemplate name="bomb" />;
-        if (isFlipped && status === 'IS_DEFUSED') {
-            return <SvgTemplate name="bomb-defused" />;
+        if (isFlipped) {
+            if (status === 'IS_DEFUSED') {
+                return <SvgTemplate name="bomb-defused" />;
+            }
+            if (['IS_EXPLODED', 'IS_COMPUTED'].includes(status)) {
+                return <SvgTemplate name="bomb" />;
+            }
         }
         return null;
     }

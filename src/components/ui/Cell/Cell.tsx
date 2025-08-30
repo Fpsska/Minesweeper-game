@@ -93,8 +93,6 @@ const Cell: FC<ITCellProps> = (cell) => {
         } else {
             // console.log('SECOND');
             if (isBomb) {
-                // console.log('SECOND + BOMB');
-                dispatch(updateCell({ id, changes: { isFlipped: true } }));
                 dispatch(openBombsMap({ id }));
                 dispatch(switchGameStatus({ status: 'lose' }));
                 dispatch(switchEmojiStatus({ emoji: 'sad' }));

@@ -90,7 +90,12 @@ const boardSlice = createSlice({
                 for (const cell of row) {
                     if (!cell.isBomb) continue;
                     cell.isFlipped = true;
-                    cell.status = cell.id === id ? 'IS_EXPLODED' : cell.status;
+                    cell.status =
+                        cell.id === id
+                            ? 'IS_EXPLODED'
+                            : cell.status === 'IS_FLAGGED'
+                            ? 'IS_DEFUSED'
+                            : 'IS_COMPUTED';
                 }
             }
         }

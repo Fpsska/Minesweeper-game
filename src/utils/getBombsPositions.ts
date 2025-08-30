@@ -1,27 +1,28 @@
 import { getRandomNum } from './helpers/getRandomNum';
 import { compareCoordinates } from './helpers/compareCoordinates';
 
-import type { TBombPosition } from '../types/boardTypes';
+import type { TCoords } from '../types/boardTypes';
 
 // /. imports
 
 export function getBombsPositions(
     boardSize: number,
     bombsCount: number
-): TBombPosition[] {
-    const positions: TBombPosition[] = [];
+): TCoords[] {
+    const result: TCoords[] = [];
 
-    while (positions.length < bombsCount) {
-        const bombPosition: TBombPosition = {
+    while (result.length < bombsCount) {
+        const bombPosition: TCoords = {
             x: getRandomNum(boardSize),
             y: getRandomNum(boardSize)
         };
 
         // validate by uniqueness of positions values
-        if (!positions.some((pos) => compareCoordinates(pos, bombPosition))) {
-            positions.push(bombPosition);
-        }
+        const isValidCoords = !result.some((pos) =>
+            compareCoordinates(pos, bombPosition)
+        );
+        if (isValidCoords) result.push(bombPosition);
     }
 
-    return positions;
+    return result;
 }

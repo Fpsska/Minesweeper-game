@@ -2,7 +2,7 @@ import { type FC } from 'react';
 
 import './menu.scss';
 
-const HIDE_FEATURES = window._APP_CONFIG_.HIDE_FEATURES;
+const HIDE_FEATURES = window._APP_CONFIG_.APP_HIDE_FEATURES;
 
 // /. imports
 

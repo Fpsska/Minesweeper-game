@@ -1,5 +1,5 @@
 type AppConfig = {
-    HIDE_FEATURES: boolean;
+    APP_HIDE_FEATURES: boolean;
 };
 
 declare global {

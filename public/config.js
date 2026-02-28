@@ -1,3 +1,3 @@
 window._APP_CONFIG_ = {
-    HIDE_FEATURES: false
+    APP_HIDE_FEATURES: false
 };

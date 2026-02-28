@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, useEffect } from 'react';
+import { type FC, type MouseEvent } from 'react';
 
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 

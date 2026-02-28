@@ -2,6 +2,8 @@ import { type FC } from 'react';
 
 import './menu.scss';
 
+const HIDE_FEATURES = window._APP_CONFIG_.HIDE_FEATURES;
+
 // /. imports
 
 const Menu: FC = () => {
@@ -13,6 +15,11 @@ const Menu: FC = () => {
             <li className="menu__option">
                 <a href="#">Help</a>
             </li>
+            {!HIDE_FEATURES && (
+                <li className="menu__option">
+                    <a href="#">SECRET OPTION</a>
+                </li>
+            )}
         </ul>
     );
 };

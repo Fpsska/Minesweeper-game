@@ -1,4 +1,4 @@
-import { createSlice, current, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import { generateBoard } from '../../utils/generateBoard';
 

@@ -10,8 +10,24 @@ const getPlugins = (
     mode: UserConfig['mode'] = 'development'
 ): UserConfig['plugins'] => {
     const isMinifyMode = ['production', 'docker'].includes(mode);
+    const isDevMode = mode === 'development';
 
     const plugins: UserConfig['plugins'] = [reactPlugin()];
+
+    if (isDevMode) {
+        plugins.push({
+            name: 'watch-app-config',
+            configureServer(server) {
+                const path = 'public/config.js';
+                server.watcher.add(path);
+                server.watcher.on('change', (path) => {
+                    if (path.endsWith(path)) {
+                        server.ws.send({ type: 'full-reload' });
+                    }
+                });
+            }
+        });
+    }
 
     if (isMinifyMode) {
         plugins.push(

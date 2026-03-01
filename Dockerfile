@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ### BUILDING STAGE ###
-# Use a NodeJs image for building (lightweight version)
+# Use a nodeJs image for building (lightweight version)
 FROM node:21.7.3-alpine AS build-stage
 
 # Set the working directory inside the container
@@ -19,16 +19,18 @@ COPY . .
 RUN npm run build:docker
 
 ### SERVING STAGE ###
-# Use a Nginx image for serving (lightweight version)
+# Use a nginx image for serving (lightweight version)
 FROM nginx:1.29.0-alpine AS serve-stage
 
 # Set up static nginx files from app build
 COPY --from=build-stage /app/build /usr/share/nginx/html
 
-# Set up custom nginx default.conf
+# Set up custom default.conf for nginx
 COPY --from=build-stage /app/docker/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+# Set up custom template for nginx
+COPY --from=build-stage /app/docker/usr/share/nginx/templates/config.js.template /usr/share/nginx/templates/
 
-# Add custom sh-script in nginx
+# Set up custom sh-script for nginx
 COPY --from=build-stage /app/docker/docker-entrypoint.d/40-app-config.sh /docker-entrypoint.d/40-app-config.sh
 # Make sh-script executable (with rules)
 RUN chmod +x /docker-entrypoint.d/40-app-config.sh

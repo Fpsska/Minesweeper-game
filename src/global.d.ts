@@ -1,5 +1,7 @@
 type AppConfig = {
-    APP_HIDE_FEATURES: boolean;
+    APP_PROFILE: 'default' | 'develop';
+    APP_VERSION?: string;
+    APP_HIDE_FEATURES?: boolean;
 };
 
 declare global {

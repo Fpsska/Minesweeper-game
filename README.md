@@ -25,5 +25,18 @@ Guideline for launch with Docker:
 
 1. open GIT console on desktop or any directory of your PC, use `git clone https://github.com/Fpsska/Minesweeper-game.git`
 2. open cloned project directory with any code editor
-3. use `docker build . -t <image-name>`
-4. use `docker run --name <container-name> -d -p 3000:8080 <image-name>`
+3. use `docker build . -t <image-name>` for create docker-image
+4. use `docker run -d --name <container-name> -p 3000:8080 <image-name>` for start docker-container
+5. use `docker run -d --name <container-name> --env-file <../file.env> -p 3000:8080 <image-name>` for start with custom app config
+
+<details>
+
+<summary>Example of valid body of .env file</summary>
+
+```json
+APP_PROFILE=develop
+APP_HIDE_FEATURES=false
+APP_VERSION=1.0.0
+```
+
+</details>
